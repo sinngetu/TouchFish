@@ -1,0 +1,180 @@
+@import './common.less';
+
+.pages {
+  height: calc(100vh - 60px);
+  background: #f5f6fa;
+  overflow: auto;
+
+  > div {
+    &.wrap {
+      min-height: 725px;
+
+      &,
+      > main {
+        height: calc(100vh - 92px);
+      }
+      > main {
+        &:not(.authentication-content) {
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        > div.wrap:not(.result) {
+          width: 520px;
+          padding: 64px 52px 58px;
+          background-color: #ffffff;
+          box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.08);
+          border-radius: 6px;
+        }
+      }
+    }
+  }
+
+  // common wrap
+  .wrap {
+    .logo {
+      width: 151px;
+    }
+
+    .title {
+      margin: 0;
+      padding: 16px 0 36px;
+      font-family: PingFangSC-Regular;
+      font-size: 18px;
+      font-weight: bold;
+      font-stretch: normal;
+      line-height: 1;
+      letter-spacing: 0px;
+      color: #31394c;
+    }
+
+    .ant-input {
+      padding: 14px;
+      border-radius: 6px;
+      font-size: 14px;
+
+      &::placeholder {
+        color: #b8c6d4;
+      }
+    }
+
+    .ant-form-item {
+      margin-bottom: 18px;
+    }
+
+    .ant-form-item-control-input-content {
+      .ant-input {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+
+    .ant-input-group-addon {
+      width: 115px;
+      height: 48px;
+      background-color: #137cfc;
+      border-radius: 0px 6px 6px 0px;
+      border: 0;
+
+      &:hover {
+        filter: brightness(106%);
+        cursor: pointer;
+      }
+
+      > button {
+        font-size: 14px;
+        color: #fff;
+      }
+    }
+
+    .ant-checkbox {
+      top: 0.23em;
+    }
+    .an-form label {
+      font-size: 14px;
+    }
+    .submit-btn {
+      width: 416px;
+      height: 52px;
+      margin: 8px 0 12px 0;
+      background-image: linear-gradient(90deg, #127bfb 0%, #0b64d2 100%),
+        linear-gradient(#f5f5f5, #f5f5f5);
+      background-blend-mode: normal, normal;
+      border-radius: 6px;
+      font-size: 16px;
+
+      &:hover {
+        box-shadow: 0 0 10px 0 rgba(64, 159, 255, 0.5);
+        filter: brightness(110%);
+      }
+
+      + a {
+        width: 56px;
+        height: 14px;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 24px;
+        letter-spacing: 0px;
+        color: #6b7586;
+      }
+    }
+
+    .ant-input-affix-wrapper {
+      padding: 0 11px 0 0;
+      border-radius: 6px;
+    }
+
+    .ant-input-suffix {
+      font-size: 16px;
+    }
+    .ant-dropdown-trigger {
+      width: calc(100% - 72px);
+      row-gap: 0;
+    }
+  }
+}
+
+@media screen and (max-height: 803px) {
+  .pages > div > main > div.wrap:not(.result) {
+    padding: 48px 48px 48px !important;
+  }
+  .pages .authentication-wrap .title {
+    padding: 12px 0 24px !important;
+  }
+  .pages .register-wrap .provision {
+    padding-top: 0px !important;
+  }
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+
+// 全局覆盖
+.ant-input-group-addon {
+  padding: 0 !important;
+  border: none !important;
+}
+.modify-wrap {
+  #captcha,
+  #newCaptcha {
+    height: 28px;
+  }
+}
+
+.ant-form-item-label label {
+  white-space: pre-wrap;
+}
+.ant-spin-nested-loading {
+  height: 100%;
+
+  > .ant-spin-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}
