@@ -2,15 +2,7 @@ import React from 'react'
 
 const Home: React.FC = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 24,
-        marginTop: '10%',
-      }}
-    >
+    <div className="warp">
       Hello World!
     </div>
   )

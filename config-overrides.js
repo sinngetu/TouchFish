@@ -34,6 +34,10 @@ module.exports = {
       '@': path.resolve(__dirname, 'src')
     }),
 
+    addLessLoader({
+      javascriptEnabled: true
+    }),
+
     fixBabelImports('import', {
       libraryName: 'antd',
       libraryDirectory: 'es',
