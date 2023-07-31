@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { message } from 'antd'
 
-// 目前只有这两种请求
 interface API {
   instance: AxiosInstance
   get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>
@@ -58,17 +57,7 @@ function resultHandle(config: AxiosRequestConfig, operate: () => Promise<any>) {
 }
 
 function resolveHandle(res: AxiosResponse<any>) {
-  const { data, code, msg } = res.data
-
-  // 44 为未登录
-  if(code - 0 === 44)
-    window.location.href = data.url
-
-  // 不等于 0 为系统错误
-  if(code !== 0)
-    return Promise.reject(new Error(msg))
-
-  return data
+  return res.data
 }
 
 function rejectHandle(err: Error | string[]) {

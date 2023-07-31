@@ -13,7 +13,7 @@ const { Header, Content } = Layout
 export default () => (
   <Layout>
     <Header style={{ display: 'flex', alignItems: 'center' }}>
-
+      <h1 style={{ color: '#fff' }}>钻瓶通</h1>
     </Header>
 
     <Content className="content">
