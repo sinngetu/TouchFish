@@ -39,6 +39,7 @@ const Home: React.FC = () => {
       </div>
 
       <Table
+        id="news-table"
         rowKey="hash"
         loading={store.loading}
         dataSource={store.data}
@@ -47,7 +48,8 @@ const Home: React.FC = () => {
         footer={() => (
           <div style={{ width: '100%', textAlign: 'center', cursor: store.loading ? 'not-allowed' : 'pointer' }} onClick={store.getNews}>
             <DownOutlined />
-            &nbsp;更多
+            &nbsp;更多&nbsp;
+            已加载<span style={{ margin: '0 2px', color: '#1677ff' }}>{store.span}小时</span>数据
           </div>
         )}
       />

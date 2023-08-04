@@ -1,22 +1,24 @@
 import { Suspense } from 'react'
 import { Router, Route, Switch, Redirect } from 'react-router-dom'
 import createHashHistory from 'history/createHashHistory'
-import { Layout } from 'antd'
+import { FloatButton, Layout } from 'antd'
 
 import routes from './routes'
 import Loading from './Loading'
+import { backTop } from '@/utils/function'
 import './index.less'
 
 const history = createHashHistory()
 const { Header, Content } = Layout
+const { BackTop } = FloatButton
 
 export default () => (
   <Layout>
     <Header style={{ display: 'flex', alignItems: 'center' }}>
-      <h1 style={{ color: '#fff' }}>钻瓶通</h1>
+      <h1 style={{ color: '#fff' }}>摸鱼平台</h1>
     </Header>
 
-    <Content className="content">
+    <Content id="content">
       <Router history={history}>
         {/* @ts-expect-error Server Component */}
         <Suspense fallback={<Loading />}>
@@ -43,6 +45,12 @@ export default () => (
           </Switch>
         </Suspense>
       </Router>
+
+      <BackTop
+        visibilityHeight={0}
+        type='primary'
+        onClick={() => backTop(document.getElementById('content') as HTMLElement)}
+      />
     </Content>
   </Layout>
 )
