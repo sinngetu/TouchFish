@@ -25,3 +25,12 @@ export function backTop(el: HTMLElement) {
     if (el.scrollTop === 0) return
     window.requestAnimationFrame(step)
 }
+
+export function debounce(func: Function, delay: number) {
+    let trigger: NodeJS.Timeout
+
+    return (...args: any[]) => {
+        clearTimeout(trigger)
+        trigger = setTimeout(() => func(...args), delay)
+    }
+}
