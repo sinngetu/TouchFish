@@ -2,7 +2,7 @@ import React from 'react'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 
-const Loading: React.FC = props => {
+const Loading: React.FC = () => {
   return (
     <div style={{
       display: 'flex',

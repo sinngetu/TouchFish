@@ -17,13 +17,13 @@ function App() {
   const [store] = useState(new AppStore())
 
   return (
-    <React.StrictMode>
+    // <React.StrictMode>
       <ConfigProvider locale={LANG[localStorage.getItem('language')!]}>
         <Provider appStore={store}>
           <Pages />
         </Provider>
       </ConfigProvider>
-    </React.StrictMode>
+    // </React.StrictMode>
   )
 }
 

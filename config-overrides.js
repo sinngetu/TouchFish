@@ -2,8 +2,6 @@ const path = require('path')
 
 const {
   override,
-  disableEsLint,
-  addLessLoader,
   fixBabelImports,
   setWebpackPublicPath,
   addDecoratorsLegacy,
@@ -11,18 +9,20 @@ const {
   overrideDevServer
 } = require('customize-cra')
 
+const { addLessLoader } = require('./webpack.extend')
 const { dev, prod } = require('./core-config')
 const isProd = process.env.NODE_ENV === 'production'
 
 process.env.PORT = process.env.WDS_SOCKET_PORT = dev.port || 3000
 process.env.WDS_SOCKET_HOST = dev.host
 process.env.REACT_APP_API_HOST = (isProd ? prod : dev).apiHost
+process.env.DISABLE_ESLINT_PLUGIN = true
 isProd && (process.env.PUBLIC_URL = prod.publicUrl)
 
 module.exports = {
   webpack: override(
-    disableEsLint(),
     addDecoratorsLegacy(),
+    addLessLoader(),
 
     setWebpackPublicPath(
       isProd
@@ -34,10 +34,6 @@ module.exports = {
       '@': path.resolve(__dirname, 'src')
     }),
 
-    addLessLoader({
-      javascriptEnabled: true
-    }),
-
     fixBabelImports('import', {
       libraryName: 'antd',
       libraryDirectory: 'es',
@@ -46,7 +42,7 @@ module.exports = {
   ),
 
   devServer: overrideDevServer(config => {
-    config.disableHostCheck = true
+    config.allowedHosts = 'all'
     config.headers = config.headers || {}
     config.headers['Access-Control-Allow-Origin'] = '*'
     config.proxy = {

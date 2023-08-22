@@ -1,13 +1,13 @@
-import { LazyExoticComponent } from 'react'
+import { ComponentType } from 'react'
+import { redirect, RouteObject } from 'react-router-dom'
 
 import Home from './Home'
 
-interface RouteItem {
-  key: string
-  path: string
-  component: LazyExoticComponent<any>
-}
+type C = ComponentType<any>
 
-const routes: RouteItem[] = [{ key: 'home', path: '/home', component: Home }]
+const routes: RouteObject[] = [
+  { path: '/home', Component: Home as C},
+  { path: '*', loader: () => redirect('/home') }
+]
 
 export default routes
