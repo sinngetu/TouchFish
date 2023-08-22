@@ -34,3 +34,19 @@ export function debounce(func: Function, delay: number) {
         trigger = setTimeout(() => func(...args), delay)
     }
 }
+
+export function copy(text: string) {
+    const textarea = document.createElement('textarea')
+    textarea.readOnly = true
+    textarea.style.position = 'absolute'
+    textarea.style.left = '-9999px'
+    textarea.value = text
+
+    document.body.appendChild(textarea)
+    textarea.select()
+
+    const result =  (document.execCommand('Copy'))
+    document.body.removeChild(textarea)
+
+    return result
+}

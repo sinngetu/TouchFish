@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Button, Input, Table, Tooltip } from 'antd'
-import { DownOutlined, HistoryOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
+import { CalendarOutlined, CopyOutlined, DownOutlined, HistoryOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
 
 import Store from './store'
@@ -21,7 +21,8 @@ const Home: React.FC<Props> = (props) => {
     { width: 160, key: 'date', dataIndex: 'date', title: '时间' },
     { width: 100, key: 'operation', title: '操作', fixed: 'right', render: (_, data) => (
       <>
-        <Tooltip title="打开链接"><a href={data.link} target="_blank"><LinkOutlined /></a></Tooltip>
+        <Tooltip title="打开链接"><a href={data.link} target="_blank" className="operation"><LinkOutlined /></a></Tooltip>
+        <Tooltip title="复制标题链接"><a id={`a-${data.hash}`} onClick={() => store.onCopy(data)}><CopyOutlined /></a></Tooltip>
       </>
     ) },
   ], [store.media])
@@ -55,6 +56,13 @@ const Home: React.FC<Props> = (props) => {
           icon={<HistoryOutlined />}
           style={{ margin: '0 12px' }}
         >最近24小时数据</Button>
+
+        <Button
+          loading={store.loading}
+          onClick={store.onGetTodayNews}
+          icon={<CalendarOutlined />}
+          style={{ margin: '0 12px' }}
+        >今日数据</Button>
       </div>
 
       <Table

@@ -1,10 +1,12 @@
 import { ChangeEvent } from 'react'
-import { has, makeAutoObservable, runInAction } from 'mobx'
+import { makeAutoObservable, runInAction } from 'mobx'
 import dayjs, { Dayjs } from 'dayjs'
+import { message } from 'antd'
+
 import { New } from './interface'
 
 import api from '@/api/news'
-import { debounce } from '@/utils/function'
+import { debounce, copy } from '@/utils/function'
 import AppStore, { Media } from '@/store'
 
 export default class HomeStore {
@@ -61,5 +63,24 @@ export default class HomeStore {
     onGetOneDayNews = () => {
         this.init()
         this.getNews(24 * 60)
+    }
+
+    onGetTodayNews = () => {
+        const { hour, minute } = dayjs()
+
+        this.init()
+        this.getNews(24 * hour() + minute())
+    }
+
+    onCopy = (record: New) => {
+        const info = [record.title, record.link]
+        const el = document.getElementById(`a-${record.hash}`)?.parentElement?.parentElement?.firstElementChild?.nextElementSibling?.querySelector('font.immersive-translate-target-inner')
+
+        if (el) info.splice(1, 0, el.innerHTML)
+
+        const text = info.join('\n')
+
+        if (copy(text)) message.success('复制成功~')
+        else message.error('复制失败!')
     }
 }
