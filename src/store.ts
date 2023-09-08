@@ -1,12 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-import MediaAPI from './api/media'
-import PlatformAPI from './api/platform'
-
-const api = {
-    media: MediaAPI,
-    platform: PlatformAPI,
-}
+import api from './api/common'
 
 interface RawMedium {
     id: number
@@ -23,21 +17,17 @@ export type Media = Map<number, { name: string, domain: string }>
 export type Platform = Map<number, string>
 
 export default class AppStore {
-    constructor() {
-        makeAutoObservable(this)
-
-        Promise.all([this.getMedia(), this.getPlatform()])
-            .finally(() => this.ready = true)
-    }
+    constructor() { makeAutoObservable(this) }
 
     ready: boolean = false
     media: Media = new Map()
     platform: Platform = new Map()
 
+    onReady = () => this.ready = true
     getMedia = () => {
         if (this.media.size) return Promise.resolve(this.media)
 
-        return api.media.getMedia()
+        return api.getMedia()
             .then((data: RawMedium[]) => data.forEach(({ id, name, domain }) => this.media.set(id, { name, domain })))
             .then(() => this.media)
     }
@@ -45,7 +35,7 @@ export default class AppStore {
     getPlatform = () => {
         if (this.platform.size) return Promise.resolve(this.platform)
 
-        return api.platform.getPlatform()
+        return api.getPlatform()
             .then((data: RawPlatform[]) => data.forEach(({ id, name }) => this.platform.set(id, name)))
             .then(() => this.platform)
     }

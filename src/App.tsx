@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Provider, observer } from 'mobx-react'
 import { ConfigProvider } from 'antd'
 import zh_CN from 'antd/es/locale/zh_CN'
@@ -15,6 +15,13 @@ const LANG: { [props: string]: Locale } = {
 
 function App() {
   const [store] = useState(new AppStore())
+
+  useEffect(() => {
+    Promise.all([
+      store.getMedia(),
+      store.getPlatform(),
+    ]).finally(store.onReady)
+  }, [])
 
   return store.ready ? (
     // <React.StrictMode>
