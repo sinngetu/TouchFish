@@ -12,7 +12,7 @@ import './index.less'
 
 interface Props { appStore: AppStore }
 
-const Home: React.FC<Props> = (props) => {
+const Home: React.FC<Props> = props => {
   const [store] = useState(new Store(props.appStore))
 
   const columes: ColumnsType<New> = useMemo(() => [

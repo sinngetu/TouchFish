@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Provider } from 'mobx-react'
+import { Provider, observer } from 'mobx-react'
 import { ConfigProvider } from 'antd'
 import zh_CN from 'antd/es/locale/zh_CN'
 import en_US from 'antd/es/locale/en_US'
@@ -16,7 +16,7 @@ const LANG: { [props: string]: Locale } = {
 function App() {
   const [store] = useState(new AppStore())
 
-  return (
+  return store.ready ? (
     // <React.StrictMode>
       <ConfigProvider locale={LANG[localStorage.getItem('language')!]}>
         <Provider appStore={store}>
@@ -24,7 +24,7 @@ function App() {
         </Provider>
       </ConfigProvider>
     // </React.StrictMode>
-  )
+  ) : null
 }
 
-export default App
+export default observer(App)

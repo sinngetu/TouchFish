@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
-import { createHashRouter, RouterProvider } from 'react-router-dom'
-import { FloatButton, Layout } from 'antd'
+import { createHashRouter, RouterProvider, redirect } from 'react-router-dom'
+import { FloatButton, Layout, Tabs } from 'antd'
 
-import routes from './routes'
+import routes, { tabItems, defaultPath } from './routes'
 import Loading from './Loading'
 import { backTop } from '@/utils/function'
 import './index.less'
@@ -17,7 +17,21 @@ export default () => (
     </Header>
 
     <Content id="content">
-      <RouterProvider router={createHashRouter(routes)} fallbackElement={<Loading />} />
+      <Tabs
+        id='page-tabs'
+        type='card'
+        defaultActiveKey={defaultPath}
+        items={tabItems}
+        onChange={path => window.location.hash = `#${path}`}
+      />
+
+      <Suspense>
+        <RouterProvider
+          router={createHashRouter(routes)}
+          fallbackElement={<Loading />}
+        />
+      </Suspense>
+
       <BackTop
         visibilityHeight={0}
         type='primary'
