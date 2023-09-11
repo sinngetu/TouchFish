@@ -3,4 +3,5 @@ export interface HotItem {
     platform: string
     content: string
     date: string
+    link: string
 }

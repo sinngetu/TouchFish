@@ -1,10 +1,12 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import dayjs, { Dayjs } from 'dayjs'
 import { createElement, CSSProperties } from 'react'
-import { Tag } from 'antd'
+import { Tag, Tooltip, message } from 'antd'
+import { LinkOutlined, CopyOutlined } from '@ant-design/icons'
 import { TimelineItemProps } from 'antd/es/timeline'
 
 import { HotItem } from './interface'
+import { copy } from '@/utils/function'
 
 import api from '@/api/hotlist'
 import AppStore, { Platform } from '@/store'
@@ -41,15 +43,7 @@ export default class HotListStore {
         const start = this.earliesy.valueOf()
 
         api.getList(start, end).then((data: HotItem[]) => runInAction(() => {
-                const mark = new Set<string>()
-
                 this.span += minutes / 60
-                // this.data = [...this.data, ...data].filter(({ hash }) => {
-                //     const discarded = mark.has(hash)
-
-                //     mark.add(hash)
-                //     return !discarded
-                // })
 
                 const cache = [] as { date: string, items: Items }[]
                 data.forEach(item => {
@@ -64,12 +58,24 @@ export default class HotListStore {
                     if (!cycle.length || ((cycle[cycle.length - 1].key as string)?.split('-')[0] !== platform))
                         cycle.push({ children: createElement(Tag, { style: { borderWidth: 2, ...colors[platform] }, children: this.platform.get(+platform) }), key: `${platform}-${date}` })
 
-                    cycle.push({ children: item.content, key: `${platform}-${item.hash}` })
+                    cycle.push({
+                        key: `${platform}-${item.hash}`,
+                        children: item.content,
+                        label: item.link ? [
+                            createElement(Tooltip, { key: 'link', title: '打开链接' , children: createElement('a', { children: createElement(Tag, { children: createElement(LinkOutlined), style: { padding: '0 5px' } }), href: item.link, target: '_blank' }) }),
+                            createElement(Tooltip, { key: 'copy', title: '复制链接' , children: createElement('a', { children: createElement(Tag, { children: createElement(CopyOutlined), style: { padding: '0 5px' } }), onClick: () => this.onCopy(item.link) }) }),
+                        ] : undefined
+                    })
                 })
 
                 cache.forEach(({ date, items }) => items[0].label = date)
 
                 this.list = cache.map(({ items }) => items).flat()
             })).finally(() => runInAction(() => this.loading = false))
+    }
+
+    onCopy = (url: string) => {
+        if (copy(url)) message.success('复制成功~')
+        else message.error('复制失败!')
     }
 }
