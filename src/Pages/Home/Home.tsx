@@ -17,7 +17,8 @@ const Home: React.FC<Props> = props => {
   const { media, highlight, data, keyword, loading, span, getNews, onCopy, onRefresh, onSearch, onGetMoreNews, onGetOneDayNews, onGetTodayNews } = store
 
   const columes: ColumnsType<New> = useMemo(() => [
-    { width: 145, key: 'medium', dataIndex: 'medium', title: '媒体', render: id => media.get(id)?.name },
+    { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', render: id => media.get(id)?.name },
+    { width: 105, key: 'keyword', dataIndex: 'keyword', title: '关键词' },
     { key: 'title', dataIndex: 'title', title: '标题', render: (data: string, _, i) => {
       let info: (string | JSX.Element)[] = [data]
 

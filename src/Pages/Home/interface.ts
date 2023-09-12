@@ -4,4 +4,5 @@ export interface New {
     title: string
     link: string
     date: string
+    keyword: string
 }
