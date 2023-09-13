@@ -19,7 +19,7 @@ const HotList: React.FC<Props> = props => {
         items={store.list}
         style={{
           position: 'relative',
-          left: -440,
+          left: 'calc(-50% + 100px)',
           top: 10
         }}
       />

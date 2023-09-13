@@ -14,7 +14,6 @@ export default class HomeStore {
         makeAutoObservable(this)
 
         appStore.getMedia().then(media => this.media = media)
-        appStore.getKeyword().then(keyword => this.highlight = keyword[0] || [])
     }
 
     media: Media = new Map()
@@ -23,7 +22,6 @@ export default class HomeStore {
     earliesy: Dayjs = dayjs()
     span: number = 0
     keyword: string = ''
-    highlight: string[] = []
     displayKeyword: string = ''
 
     init = () => {

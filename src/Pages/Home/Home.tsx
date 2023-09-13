@@ -14,31 +14,12 @@ interface Props { appStore: AppStore }
 
 const Home: React.FC<Props> = props => {
   const [store] = useState(new Store(props.appStore))
-  const { media, highlight, data, keyword, loading, span, getNews, onCopy, onRefresh, onSearch, onGetMoreNews, onGetOneDayNews, onGetTodayNews } = store
+  const { media, data, keyword, loading, span, getNews, onCopy, onRefresh, onSearch, onGetMoreNews, onGetOneDayNews, onGetTodayNews } = store
 
   const columes: ColumnsType<New> = useMemo(() => [
     { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', render: id => media.get(id)?.name },
     { width: 105, key: 'keyword', dataIndex: 'keyword', title: '关键词' },
-    { key: 'title', dataIndex: 'title', title: '标题', render: (data: string, _, i) => {
-      let info: (string | JSX.Element)[] = [data]
-
-      highlight.forEach(word => {
-        info = info.map((data) => {
-          if (typeof data !== 'string')
-            return data
-
-          const list: (string | JSX.Element)[] = []
-          data.split(word).forEach((frag, i) => {
-            (i !== 0) && list.push(<span key={i} className='keyword-highlight'>{word}</span>)
-            list.push(frag)
-          })
-
-          return list
-        }).flat()
-      })
-
-      return <>{info}</>
-    } },
+    { key: 'title', dataIndex: 'title', title: '标题' },
     { width: 160, key: 'date', dataIndex: 'date', title: '时间' },
     { width: 100, key: 'operation', title: '操作', fixed: 'right', render: (_, data) => (
       <>
@@ -46,7 +27,7 @@ const Home: React.FC<Props> = props => {
         <Tooltip key="copy" title="复制标题链接"><a id={`a-${data.hash}`} onClick={() => onCopy(data)}><CopyOutlined /></a></Tooltip>
       </>
     ) },
-  ], [media, highlight])
+  ], [media])
 
   const dataSource = useMemo(() => data.filter(({ title }) => title.includes(keyword)), [data, keyword])
 
