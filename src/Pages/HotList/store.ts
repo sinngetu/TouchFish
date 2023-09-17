@@ -19,6 +19,7 @@ const colors: { [id: string]: CSSProperties  } = {
     '08': { color: '#060101', backgroundColor: '#ffaa51', borderColor: '#d52c2b' },
     '09': { color: '#fff', backgroundColor: '#06f', borderColor: '#06f' },
     '10': { color: '#e10602', backgroundColor: '#fff', borderColor: '#2932e1' },
+    '11': { color: '#f04142', backgroundColor: '#fff', borderColor: '#f04142' },
 }
 
 export default class HotListStore {
@@ -26,7 +27,7 @@ export default class HotListStore {
         makeAutoObservable(this)
 
         appStore.getPlatform().then(platform => this.platform = platform)
-        appStore.getKeyword().then(keyword => this.highlight = keyword[0] || [])
+        appStore.getKeyword().then(keyword => this.highlight = (keyword[0] || []).map(({ word }) => word))
     }
 
     highlight: string[] = []
@@ -35,6 +36,12 @@ export default class HotListStore {
     list: Items = []
     earliesy: Dayjs = dayjs()
     span: number = 0
+
+    init = () => {
+        this.list = []
+        this.earliesy = dayjs()
+        this.span = 0
+    }
 
     getList = (minutes: number = 30) => {
         if (this.loading) return
@@ -63,9 +70,9 @@ export default class HotListStore {
 
                 cycle.push({
                     key: `${platform}-${item.hash}`,
-                    children: content,
+                    children: createElement('a', { children: content, href: item.link, target: '_blank', className: 'black' }),
                     label: item.link ? [
-                        createElement(Tooltip, { key: 'link', title: '打开链接' , children: createElement('a', { children: createElement(Tag, { children: createElement(LinkOutlined), style: { padding: '0 5px' } }), href: item.link, target: '_blank' }) }),
+                        // createElement(Tooltip, { key: 'link', title: '打开链接' , children: createElement('a', { children: createElement(Tag, { children: createElement(LinkOutlined), style: { padding: '0 5px' } }), href: item.link, target: '_blank' }) }),
                         createElement(Tooltip, { key: 'copy', title: '复制链接' , children: createElement('a', { children: createElement(Tag, { children: createElement(CopyOutlined), style: { padding: '0 5px' } }), onClick: () => this.onCopy(item.link) }) }),
                     ] : undefined
                 })
@@ -73,9 +80,16 @@ export default class HotListStore {
 
             cache.forEach(({ date, items }) => items[0].label = date)
 
-            this.list = cache.map(({ items }) => items).flat()
+            this.list = [...this.list, ...(cache.map(({ items }) => items).flat())]
         })).finally(() => runInAction(() => this.loading = false))
     }
+
+    onRefresh = () => {
+        this.init()
+        this.getList()
+    }
+
+    onGetMoreNews = () => this.getList(30)
 
     onCopy = (url: string) => {
         if (copy(url)) message.success('复制成功~')

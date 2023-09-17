@@ -12,6 +12,16 @@ html, body {
     min-height: 725px;
     background-color: #fff;
     padding: 24px;
+
+    .toolbar {
+      position: relative;
+      margin-bottom: 12px;
+
+      .toolbar-right {
+          float: right;
+          right: 0;
+      }
+    }
   }
 }
 
@@ -26,3 +36,7 @@ input:-webkit-autofill {
 }
 
 a.operation { margin-right: 12px; }
+a.black {
+  color: #333;
+  &:hover { color: #aaa; }
+}
