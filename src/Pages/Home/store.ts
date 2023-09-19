@@ -74,7 +74,7 @@ export default class HomeStore {
 
     onCopy = (record: New) => {
         const info = [record.title, record.link]
-        const el = document.getElementById(`a-${record.hash}`)?.parentElement?.parentElement?.firstElementChild?.nextElementSibling?.querySelector('font.immersive-translate-target-inner')
+        const el = document.getElementById(`a-${record.hash}`)?.parentElement?.parentElement?.firstElementChild?.nextElementSibling?.nextElementSibling?.querySelector('font.immersive-translate-target-inner')
 
         if (el) info.splice(1, 0, el.innerHTML)
 
