@@ -22,7 +22,7 @@ const Home: React.FC<Props> = props => {
     const record = dataSource[i]
     const next = dataSource[i + 1]
 
-    if (!next) return false
+    if (!next) return true
     return next.date.slice(0, -4) !== record.date.slice(0, -4)
   }, [dataSource])
 
