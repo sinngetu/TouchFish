@@ -4,4 +4,25 @@
         transition: all .3s;
         &:hover { background-color: #f0f8ff; }
     }
+
+    .cut-line {
+        position: relative;
+
+        .time-tag {
+            bottom: -10px;
+            display: block;
+            position: absolute;
+            z-index: 1;
+            background: #999;
+            color: #fff;
+            border-radius: 5px;
+            line-height: 20px;
+            padding: 0 4px;
+        }
+
+        td {
+            border-width: 2px;
+            border-color: #999;
+        }
+    }
 }

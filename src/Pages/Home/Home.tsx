@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Button, Input, Table, Tooltip } from 'antd'
 import { CalendarOutlined, CopyOutlined, DownOutlined, HistoryOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons'
@@ -16,20 +16,35 @@ const Home: React.FC<Props> = props => {
   const [store] = useState(new Store(props.appStore))
   const { media, data, keyword, loading, span, getNews, onCopy, onRefresh, onSearch, onGetMoreNews, onGetOneDayNews, onGetTodayNews } = store
 
+  const dataSource = useMemo(() => data.filter(({ title }) => title.includes(keyword)), [data, keyword])
+
+  const hasCut = useCallback((i: number) => {
+    const record = dataSource[i]
+    const next = dataSource[i + 1]
+
+    if (!next) return false
+    return next.date.slice(0, -4) !== record.date.slice(0, -4)
+  }, [dataSource])
+
   const columes: ColumnsType<New> = useMemo(() => [
     { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', render: id => media.get(id)?.name },
     { width: 105, key: 'keyword', dataIndex: 'keyword', title: '关键词' },
-    { key: 'title', dataIndex: 'title', title: '标题' },
+    { key: 'title', dataIndex: 'title', title: '标题', render: (text, data, i) => (
+      <>
+        {text}
+        {hasCut(i) ? <span className="time-tag">{data.date.slice(11, 16)}</span> : undefined}
+      </>
+    ) },
     { width: 160, key: 'date', dataIndex: 'date', title: '时间' },
-    { width: 100, key: 'operation', title: '操作', fixed: 'right', render: (_, data) => (
+    { width: 100, key: 'operation', title: '操作', fixed: 'right', render: (_, data, i) => (
       <>
         <Tooltip key="link" title="打开链接"><a href={data.link} target="_blank" className="operation"><LinkOutlined /></a></Tooltip>
         <Tooltip key="copy" title="复制标题链接"><a id={`a-${data.hash}`} onClick={() => onCopy(data)}><CopyOutlined /></a></Tooltip>
       </>
-    ) },
-  ], [media])
+    ) }
+  ], [media, hasCut])
 
-  const dataSource = useMemo(() => data.filter(({ title }) => title.includes(keyword)), [data, keyword])
+  const rowClassName = useCallback((_: New, i: number) => hasCut(i) ? 'cut-line' : '', [hasCut])
 
   useEffect(() => { getNews() }, [])
 
@@ -73,6 +88,7 @@ const Home: React.FC<Props> = props => {
         loading={loading}
         dataSource={dataSource}
         columns={columes}
+        rowClassName={rowClassName}
         pagination={false}
         footer={() => (
           <div style={{ width: '100%', textAlign: 'center', cursor: loading ? 'not-allowed' : 'pointer' }} onClick={onGetMoreNews}>
