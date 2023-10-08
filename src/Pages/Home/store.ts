@@ -42,7 +42,7 @@ export default class HomeStore {
             .then((data: New[]) => runInAction(() => {
                 const mark = new Set<string>()
 
-                this.span += minutes / 60
+                this.span += Number((minutes / 60).toFixed(2))
                 this.data = [...this.data, ...data].filter(({ hash }) => {
                     const discarded = mark.has(hash)
 
@@ -66,10 +66,13 @@ export default class HomeStore {
     }
 
     onGetTodayNews = () => {
-        const { hour, minute } = dayjs()
+        const now = dayjs()
+        const hour = Number(now.format('HH'))
+        const minute = Number(now.format('mm'))
+        const second = Number(now.format('ss'))
 
         this.init()
-        this.getNews(24 * hour() + minute())
+        this.getNews(60 * hour + minute + second / 60)
     }
 
     onCopy = (record: New) => {
