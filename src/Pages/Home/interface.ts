@@ -1,6 +1,6 @@
 export interface New {
     hash: string
-    media: string
+    medium: number
     title: string
     link: string
     date: string

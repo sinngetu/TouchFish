@@ -69,6 +69,7 @@ export default class HotListStore {
                     cycle.push({ children: createElement(Tag, { style: { borderWidth: 2, ...colors[platform] }, children: this.platform.get(+platform) }), key: `${platform}-${date}` })
 
                 cycle.push({
+                    color: 'gray',
                     key: `${platform}-${item.hash}`,
                     children: createElement('a', { children: content, href: item.link, target: '_blank', className: 'black' }),
                     label: item.link ? [

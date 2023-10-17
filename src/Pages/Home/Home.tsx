@@ -27,7 +27,7 @@ const Home: React.FC<Props> = props => {
   }, [dataSource])
 
   const columes: ColumnsType<New> = useMemo(() => [
-    { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', render: id => media.get(id)?.name },
+    { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', align: 'center', render: id => media.get(id)?.name },
     { width: 105, key: 'keyword', dataIndex: 'keyword', title: '关键词' },
     { key: 'title', dataIndex: 'title', title: '标题', render: (text, data, i) => (
       <>
@@ -44,7 +44,18 @@ const Home: React.FC<Props> = props => {
     ) }
   ], [media, hasCut])
 
-  const rowClassName = useCallback((_: New, i: number) => hasCut(i) ? 'cut-line' : '', [hasCut])
+  const rowClassName = useCallback((record: New, i: number) => {
+    const m = record.medium
+    let className = ''
+
+    if (m === 1 || m === 64) className += 'wsj'
+    if (m === 22 || m === 23) className += 'ft'
+    if (m === 24) className += 'reuters'
+    if (m === 26) className += 'bloomberg'
+    if (hasCut(i)) className += ' cut-line'
+
+    return className
+  }, [hasCut])
 
   useEffect(() => { getNews() }, [])
 
