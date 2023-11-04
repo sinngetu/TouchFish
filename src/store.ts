@@ -4,7 +4,7 @@ import api from './api/common'
 
 export type Media = Map<number, { name: string, domain: string }>
 export type Platform = Map<number, string>
-export type Keyword = { id: number, word: string }
+export type Keyword = { id: number, word: string, extend?: string }
 
 export default class AppStore {
     constructor() { makeAutoObservable(this) }
@@ -45,11 +45,11 @@ export default class AppStore {
         if (Object.keys(this.keyword).length) return Promise.resolve(this.keyword)
         if (this._keyword) return this._keyword
 
-        this._keyword = api.getKeyword().then((data) => data.forEach(({ id, word, type }) => {
+        this._keyword = api.getKeyword().then((data) => data.forEach(({ id, word, type, extend }) => {
             if (!this.keyword[type])
                 this.keyword[type] = []
 
-            this.keyword[type].push({ id, word })
+            this.keyword[type].push({ id, word, extend })
         })).then(() => this.keyword)
 
         return this._keyword

@@ -15,6 +15,7 @@ interface RawKeyword {
     id: number
     word: string
     type: number
+    extend?: string
 }
 
 export default {
