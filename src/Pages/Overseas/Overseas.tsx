@@ -196,10 +196,16 @@ const Overseas: React.FC<Props> = props => {
 
           <span style={{ lineHeight: 2.14 }}>
             已加载
-            <span style={{ margin: '0 2px', color: '#1677ff' }}>
-              {span}小时
+            <span style={{ margin: '0 6px', color: '#1677ff' }}>
+              {span}&nbsp;小时
             </span>
             数据
+            <Divider type="vertical" />
+            共
+            <span style={{ margin: '0 6px', color: '#1677ff' }}>
+              {data.length}
+            </span>
+            条数据
           </span>
 
           <Dropdown menu={manageMenu}>
