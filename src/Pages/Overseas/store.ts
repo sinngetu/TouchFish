@@ -149,7 +149,7 @@ export default class OverseasStore {
     }
 
     highlightKeyword = (content: string) => {
-        let info: (string | JSX.Element)[] = [content]
+        let info: (string | JSX.Element)[] = [content.toLowerCase()]
 
         this.highlight.forEach(word => {
             info = info.map((data) => {
@@ -157,7 +157,7 @@ export default class OverseasStore {
                 return data
 
             const list: (string | JSX.Element)[] = []
-            data.split(word).forEach((frag, i) => {
+            data.split(word.toLowerCase()).forEach((frag, i) => {
                 (i !== 0) && list.push(createElement('span', {
                     key: i,
                     className: 'keyword-highlight',
