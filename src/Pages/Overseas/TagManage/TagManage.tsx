@@ -1,7 +1,7 @@
 import React, { useState, forwardRef, useCallback, useImperativeHandle } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Button, ColorPicker, Divider, Input, Modal, Popconfirm, Switch } from 'antd'
-import { CloseOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 
 import Store from './store'
 import { Ref, Props } from './interface'

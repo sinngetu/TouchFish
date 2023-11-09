@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import dayjs, { Dayjs } from 'dayjs'
-import { createElement } from 'react'
-import { Tag } from 'antd'
+import { Fragment, createElement } from 'react'
 import { TimelineItemProps } from 'antd/es/timeline'
 
 import api from '@/api/daddy'
@@ -12,9 +11,13 @@ type Items = TimelineItemProps[]
 export default class DaddyStore {
     constructor() { makeAutoObservable(this) }
 
+    // private
+    highlight: string[] = ['马云', 'jack ma', 'Jack Ma']
+    earliesy: Dayjs = dayjs()
+
+    // public
     loading: boolean = false
     list: Items = []
-    earliesy: Dayjs = dayjs()
     span: number = 0
 
     init = () => {
@@ -37,7 +40,7 @@ export default class DaddyStore {
             const cache = [] as { date: string, items: Items }[]
             data.forEach(item => {
                 const date = item.date.slice(5, -3)
-                const content = item.content
+                const content = this.highlightKeyword(item.content)
 
                 if (!cache.length || (cache[cache.length - 1].date !== date))
                     cache.push({ date, items: [] })
@@ -63,8 +66,28 @@ export default class DaddyStore {
 
     onGetMoreNews = () => this.getList(30)
 
-    // onCopy = (url: string) => {
-    //     if (copy(url)) message.success('复制成功~')
-    //     else message.error('复制失败!')
-    // }
+    highlightKeyword = (content: string) => {
+        let info: (string | JSX.Element)[] = [content]
+
+        this.highlight.forEach(word => {
+            info = info.map((data) => {
+            if (typeof data !== 'string')
+                return data
+
+            const list: (string | JSX.Element)[] = []
+            data.split(word).forEach((frag, i) => {
+                (i !== 0) && list.push(createElement('span', {
+                    key: i,
+                    className: 'keyword-highlight',
+                    children: word
+                }))
+                list.push(frag)
+            })
+
+            return list
+            }).flat()
+        })
+
+        return createElement(Fragment, { children: info })
+    }
 }

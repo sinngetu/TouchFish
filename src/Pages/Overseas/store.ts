@@ -8,6 +8,7 @@ import { News } from './interface'
 import api from '@/api/news'
 import { copy } from '@/utils/function'
 import AppStore, { Keyword, Media } from '@/store'
+import { Fragment, createElement } from 'react'
 
 interface Params {
     title?: string
@@ -22,11 +23,13 @@ export default class OverseasStore {
 
         appStore.getMedia().then(media => this.media = media)
         appStore.getKeyword().then(keyword => this.tags = keyword[1])
+        appStore.getKeyword().then(keyword => this.highlight = (keyword[2] || []).map(({ word }) => word))
     }
 
     // private
     recent: number = 0
     params: Params = { start: 0, end: 0 }
+    highlight: string[] = []
 
     // public
     data: News[] = []
@@ -143,5 +146,30 @@ export default class OverseasStore {
 
         if (!next) return true
         return next.date.slice(0, -4) !== record.date.slice(0, -4)
+    }
+
+    highlightKeyword = (content: string) => {
+        let info: (string | JSX.Element)[] = [content]
+
+        this.highlight.forEach(word => {
+            info = info.map((data) => {
+            if (typeof data !== 'string')
+                return data
+
+            const list: (string | JSX.Element)[] = []
+            data.split(word).forEach((frag, i) => {
+                (i !== 0) && list.push(createElement('span', {
+                    key: i,
+                    className: 'keyword-highlight',
+                    children: word
+                }))
+                list.push(frag)
+            })
+
+            return list
+            }).flat()
+        })
+
+        return createElement(Fragment, { children: info })
     }
 }

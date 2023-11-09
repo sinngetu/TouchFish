@@ -1,14 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Provider, inject, observer } from 'mobx-react'
-import { Button, DatePicker, Divider, Form, Input, Popover, Table, Tag, Tooltip } from 'antd'
-import { CalendarOutlined, CopyOutlined, DownOutlined, HistoryOutlined, LinkOutlined, LoadingOutlined, UndoOutlined, ReloadOutlined, SearchOutlined, SettingOutlined, TagOutlined } from '@ant-design/icons'
+import { Button, DatePicker, Divider, Dropdown, Form, Input, Popover, Table, Tag, Tooltip } from 'antd'
+import { CopyOutlined, DownOutlined, LinkOutlined, LoadingOutlined, UndoOutlined, SearchOutlined, SettingOutlined, TagOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
+import { MenuProps } from 'antd/es/menu'
+
+import AppStore from '@/store'
+import KeywordManage, { Ref as KeywordManageRef } from '@/common/KeywordManage'
+import api from '@/api/news'
 
 import Store from './store'
 import { News } from './interface'
-import AppStore from '@/store'
-
-import TagManage, { Ref } from './TagManage'
+import TagManage, { Ref as TagManageRef } from './TagManage'
 import TagItem from './TagItem'
 
 import './index.less'
@@ -20,8 +23,9 @@ interface Props { appStore: AppStore }
 
 const Overseas: React.FC<Props> = props => {
   const [store] = useState(new Store(props.appStore))
-  const { media, data, loading, span, presets, formInit, hasCut, disabledDate, onCopy, onTagTheNews, onSearch } = store
-  const tagManage = useRef<Ref>(null)
+  const { media, data, loading, span, presets, formInit, hasCut, disabledDate, highlightKeyword, onCopy, onTagTheNews, onSearch } = store
+  const tagManage = useRef<TagManageRef>(null)
+  const keywordManage = useRef<KeywordManageRef>(null)
   const [form] = Form.useForm()
 
   const TagsContent = useCallback((record: News) => {
@@ -91,7 +95,7 @@ const Overseas: React.FC<Props> = props => {
 
   const columes: ColumnsType<News> = useMemo(() => [
     { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', align: 'center', render: id => media.get(id)?.name },
-    { width: 105, key: 'keyword', dataIndex: 'keyword', title: '关键词' },
+    { width: 105, key: 'keyword', dataIndex: 'keyword', title: '搜索关键词' },
     { key: 'title', dataIndex: 'title', title: '标题', render: (text, data, i) => (
       <>
         <Popover trigger="click" content={TagsContent(data)}>
@@ -99,7 +103,7 @@ const Overseas: React.FC<Props> = props => {
             <Tag style={{ padding: '1px 5px 0', cursor: 'pointer' }}><TagOutlined /></Tag>
           </Tooltip>
         </Popover>
-        {text}
+        {highlightKeyword(text)}
         {ShowTags(data.tags)}
         {hasCut(i) ? <span className="time-tag">{data.date.slice(11, 16)}</span> : undefined}
       </>
@@ -111,7 +115,7 @@ const Overseas: React.FC<Props> = props => {
         <Tooltip key="copy" title="复制标题链接"><a id={`a-${data.hash}`} onClick={() => onCopy(data)}><CopyOutlined /></a></Tooltip>
       </>
     ) }
-  ], [media, hasCut])
+  ], [media])
 
   const rowClassName = useCallback((record: News, i: number) => {
     const m = record.medium
@@ -125,6 +129,20 @@ const Overseas: React.FC<Props> = props => {
 
     return className
   }, [hasCut])
+
+  const manageMenu: MenuProps = useMemo(() => ({
+    items: [
+      { key: 'tag', label: '标签管理' },
+      { key: 'keyword', label: '关键词管理' }
+    ],
+
+    onClick: ({ key }) => {
+      switch (key) {
+        case 'tag': return tagManage.current?.onShow()
+        case 'keyword': return keywordManage.current?.onShow()
+      }
+    }
+  }), [tagManage, keywordManage])
 
   useEffect(() => { onSearch(formInit) }, [])
 
@@ -184,12 +202,13 @@ const Overseas: React.FC<Props> = props => {
             数据
           </span>
 
-          <Button
-            type="link"
-            icon={<SettingOutlined />}
-            onClick={tagManage.current?.onShow}
-            style={{ position: 'absolute', right: 0, top: 0 }}
-          >标签管理</Button>
+          <Dropdown menu={manageMenu}>
+            <Button
+              type="link"
+              icon={<SettingOutlined />}
+              style={{ position: 'absolute', right: 0, top: 0 }}
+            >管理</Button>
+          </Dropdown>
         </div>
 
         <Table
@@ -217,6 +236,12 @@ const Overseas: React.FC<Props> = props => {
         />
 
         <TagManage ref={tagManage} />
+        <KeywordManage
+          ref={keywordManage}
+          keywordIndex={2}
+          addAPI={api.addKeyword}
+          delAPI={api.delKeyword}
+        />
       </div>
     </Provider>
   )

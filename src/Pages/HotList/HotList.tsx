@@ -4,9 +4,10 @@ import { Button, Timeline } from 'antd'
 import { DownOutlined, ReloadOutlined, SettingOutlined, SyncOutlined } from '@ant-design/icons'
 
 import AppStore from '@/store'
+import api from '@/api/hotlist'
+import KeywordManage, { Ref } from '@/common/KeywordManage'
 
 import Store from './store'
-import KeywordManage, { Ref } from './KeywordManage'
 
 import './index.less'
 
@@ -64,7 +65,12 @@ const HotList: React.FC<Props> = props => {
         >更多</Button>
       </div>
 
-      <KeywordManage ref={keywordManage} />
+      <KeywordManage
+        ref={keywordManage}
+        keywordIndex={0}
+        addAPI={api.addKeyword}
+        delAPI={api.delKeyword}
+      />
     </div>
   )
 }

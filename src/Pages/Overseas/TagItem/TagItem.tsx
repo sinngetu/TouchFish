@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { Button, Popover, Tag } from 'antd'
+import { Button, Popover } from 'antd'
 import { TagOutlined } from '@ant-design/icons'
 
 import { Keyword } from '@/store'

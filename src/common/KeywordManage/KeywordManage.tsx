@@ -7,7 +7,7 @@ import Store from './store'
 import { Ref, Props } from './interface'
 
 const KeywordManage = forwardRef<Ref, Props>((props, ref) => {
-  const [store] = useState(new Store(props.appStore!))
+  const [store] = useState(new Store(props.appStore!, props.keywordIndex, props.addAPI, props.delAPI))
   const { show, keywords, addLoading, filter, newKeyword, showAdd, onShow, onCancel, onAdd, onDel, onShowAdd, onChangeFilter, onChangeNewKeyword } = store
   const [delID, setDelID] = useState(-1)
   const onSetDelID = useCallback((id: number) => setDelID(id), [setDelID])

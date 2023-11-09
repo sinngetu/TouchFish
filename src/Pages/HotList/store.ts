@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import dayjs, { Dayjs } from 'dayjs'
 import { createElement, CSSProperties, Fragment } from 'react'
 import { Tag, Tooltip, message } from 'antd'
-import { LinkOutlined, CopyOutlined } from '@ant-design/icons'
+import { CopyOutlined } from '@ant-design/icons'
 import { TimelineItemProps } from 'antd/es/timeline'
 
 import { HotItem } from './interface'

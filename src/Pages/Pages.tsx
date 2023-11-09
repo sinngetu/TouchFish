@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { createHashRouter, RouterProvider, redirect } from 'react-router-dom'
+import { createHashRouter, RouterProvider } from 'react-router-dom'
 import { FloatButton, Layout, Tabs } from 'antd'
 
 import routes, { tabItems, defaultPath } from './routes'

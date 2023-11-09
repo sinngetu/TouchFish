@@ -2,16 +2,17 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import { message } from 'antd'
 
 import AppStore, { Keyword } from '@/store'
-
-import api from '@/api/hotlist'
+import { Props } from './interface'
 
 export default class KeywordManageStore {
-    constructor(appStore: AppStore) {
+    constructor(appStore: AppStore, keywordIndex: number, addAPI: Props['addAPI'], delAPI: Props['delAPI']) {
         makeAutoObservable(this)
 
-        appStore.getKeyword().then(keyword => this.keywords = keyword[0])
+        appStore.getKeyword().then(keyword => this.keywords = keyword[keywordIndex] || [])
+        this.api = { addAPI, delAPI }
     }
 
+    api: { addAPI: Props['addAPI'], delAPI: Props['delAPI'] }
     keywords: Keyword[] = []
     show: boolean = false
     initLoading: boolean = false
@@ -35,7 +36,7 @@ export default class KeywordManageStore {
         }
 
         this.addLoading = true
-        api.addKeyword(word).then(({ id }) => runInAction(() => {
+        this.api.addAPI(word).then(({ id }) => runInAction(() => {
             const newKeywords = [...this.keywords, { id, word }]
 
             message.success('添加成功~页面刷新后生效')
@@ -45,7 +46,7 @@ export default class KeywordManageStore {
         })).finally(() => runInAction(() => this.addLoading = false))
     }
 
-    onDel = (id: number) => () => api.delKeyword(id).then(({ success }) => runInAction(() => {
+    onDel = (id: number) => () => this.api.delAPI(id).then(({ success }) => runInAction(() => {
         if (!success) return message.error('删除失败!')
         const newKeywords = [...this.keywords]
 
