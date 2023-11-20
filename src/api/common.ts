@@ -18,8 +18,20 @@ interface RawKeyword {
     extend?: string
 }
 
+export interface Globalization {
+    [platform: string]: {
+        platform: string
+        url: string
+        content: string
+        username: string
+        total: string
+        prefix: string
+    }[]
+}
+
 export default {
     getMedia: () => api.get<RawMedium[]>('/common/media'),
     getKeyword: () => api.get<RawKeyword[]>('/common/keyword'),
     getPlatform: () => api.get<RawPlatform[]>('/common/platform'),
+    getGlobalization: (urls: string[]) => api.post<Globalization>('/common/globalization', { urls })
 }

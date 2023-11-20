@@ -4,6 +4,7 @@ import { redirect, RouteObject } from 'react-router-dom'
 import Overseas from './Overseas'
 import HotList from './HotList'
 import Daddy from './Daddy'
+import Globalization from './Globalization'
 
 type C = ComponentType<any>
 
@@ -12,6 +13,7 @@ const pages = [
   { label: '境外媒体', path: '/overseas', component: Overseas },
   { label: '热榜', path: '/hotlist', component: HotList },
   { label: '大爹专区', path: '/daddy', component: Daddy },
+  { label: '全球化', path: '/globalization', component: Globalization },
 ]
 
 const routes: RouteObject[] = pages.map(({ path, component }) => ({ path, Component: component as C }))
