@@ -13,7 +13,7 @@ const { BackTop } = FloatButton
 export default () => (
   <Layout>
     <Header style={{ display: 'flex', alignItems: 'center' }}>
-      <h1 style={{ color: '#fff' }}>摸鱼平台</h1>
+      <h1 style={{ color: '#fff' }}>摸舆平台</h1>
     </Header>
 
     <Content id="content">
