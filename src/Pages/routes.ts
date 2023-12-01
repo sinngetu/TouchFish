@@ -12,7 +12,7 @@ export const defaultPath = '/overseas'
 const pages = [
   { label: '境外媒体', path: '/overseas', component: Overseas },
   { label: '热榜', path: '/hotlist', component: HotList },
-  { label: '大爹专区', path: '/daddy', component: Daddy },
+  { label: '高层动态', path: '/daddy', component: Daddy },
   { label: '全球化', path: '/globalization', component: Globalization },
 ]
 
