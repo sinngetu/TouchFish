@@ -15,6 +15,7 @@ interface Params {
     tags?: number[]
     start: number
     end: number
+    status: number
 }
 
 export default class OverseasStore {
@@ -28,7 +29,7 @@ export default class OverseasStore {
 
     // private
     recent: number = 0
-    params: Params = { start: 0, end: 0 }
+    params: Params = { start: 0, end: 0, status: 0 }
     highlight: string[] = []
 
     // public
@@ -108,7 +109,8 @@ export default class OverseasStore {
                 title: !!title ? title : undefined,
                 tags: (tags && tags.length) ? tags : undefined,
                 start: start.valueOf(),
-                end: end.valueOf()
+                end: end.valueOf(),
+                status: 0
             }
         } else {
             this.params.start = this.params.start - 1800000

@@ -3,5 +3,5 @@ export interface DaddyInfo {
     content: string
     link: string
     date: string
-    state: number
+    type: number
 }

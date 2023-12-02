@@ -102,20 +102,20 @@ export default class HotListStore {
 
         this.highlight.forEach(word => {
             info = info.map((data) => {
-            if (typeof data !== 'string')
-                return data
+                if (typeof data !== 'string')
+                    return data
 
-            const list: (string | JSX.Element)[] = []
-            data.split(word).forEach((frag, i) => {
-                (i !== 0) && list.push(createElement('span', {
-                    key: i,
-                    className: 'keyword-highlight',
-                    children: word
-                }))
-                list.push(frag)
-            })
+                const list: (string | JSX.Element)[] = []
+                data.split(word).forEach((frag, i) => {
+                    (i !== 0) && list.push(createElement('span', {
+                        key: i,
+                        className: 'keyword-highlight',
+                        children: word
+                    }))
+                    list.push(frag)
+                })
 
-            return list
+                return list
             }).flat()
         })
 
