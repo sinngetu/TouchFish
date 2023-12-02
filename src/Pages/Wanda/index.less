@@ -1,0 +1,52 @@
+#news-filter {
+    margin-bottom: 12px;
+    .ant-form-item { margin-right: 12px; }
+}
+
+#news-table {
+    .keyword-highlight { color: #ff4d4f; }
+
+    .ant-table-footer {
+        transition: all .3s;
+        &:hover { background-color: #f0f8ff; }
+    }
+
+    tr {
+        &.ft { background-image: linear-gradient(to right, rgba(255, 241, 229, 1) 0.7%, rgba(255, 255, 255, 0) 0.71%); }
+        &.bloomberg { background-image: linear-gradient(to right, rgba(27, 27, 27, 1) 0.7%, rgba(255, 255, 255, 0) 0.71%); }
+        &.wsj { background-image: linear-gradient(to right, rgba(120, 120, 120, 1) 0.3%, rgba(0, 0, 0, 1) 0.31%, rgba(0, 0, 0, 1) 0.7%, rgba(255, 255, 255, 0) 0.71%); }
+        &.reuters { background-image: linear-gradient(to right, rgba(244, 136, 66, 0.75) 0.7%, rgba(255, 255, 255, 0) 0.71%); }
+    }
+
+    .cut-line {
+        position: relative;
+
+        .time-tag {
+            bottom: -10px;
+            display: block;
+            position: absolute;
+            z-index: 1;
+            background: #999;
+            color: #fff;
+            border-radius: 5px;
+            line-height: 20px;
+            padding: 0 4px;
+        }
+
+        td {
+            border-width: 2px;
+            border-color: #999;
+        }
+    }
+}
+
+span.news-tags {
+    cursor: pointer;
+    font-size: 12px;
+    margin-right: 9px;
+    padding: 1px 7px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-style: solid;
+    transition: all .3s;
+}
