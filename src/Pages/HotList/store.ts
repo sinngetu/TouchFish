@@ -30,12 +30,16 @@ export default class HotListStore {
         appStore.getKeyword().then(keyword => this.highlight = (keyword[0] || []).map(({ word }) => word))
     }
 
+    timer: number = NaN
+
     highlight: string[] = []
     platform: Platform = new Map()
     loading: boolean = false
     list: Items = []
     earliesy: Dayjs = dayjs()
     span: number = 0
+    weiboList: HotItem[] = []
+    marked: string[] = []
 
     init = () => {
         this.list = []
@@ -55,7 +59,7 @@ export default class HotListStore {
             this.span += minutes / 60
 
             const cache = [] as { date: string, items: Items }[]
-            data.forEach(item => {
+            data.filter(item => item.platform !== 8).forEach(item => {
                 const date = item.date.slice(5, -3)
                 const platform = item.date.slice(-2)
                 const content = this.highlightKeyword(item.content)
@@ -85,9 +89,12 @@ export default class HotListStore {
         })).finally(() => runInAction(() => this.loading = false))
     }
 
+    getWeiboList = () => { api.getWeiboList().then((data: HotItem[]) => runInAction(() => { this.weiboList = data })) }
+
     onRefresh = () => {
         this.init()
         this.getList()
+        this.getWeiboList()
     }
 
     onGetMoreNews = () => this.getList(30)
@@ -95,6 +102,25 @@ export default class HotListStore {
     onCopy = (url: string) => {
         if (copy(url)) message.success('复制成功~')
         else message.error('复制失败!')
+    }
+
+    onMark = (hash: string) => {
+        const marked = [...this.marked]
+        const i = marked.findIndex(h => h === hash)
+
+        i === -1 ? marked.push(hash) : marked.splice(i, 1)
+
+        this.marked = marked
+        localStorage.setItem('weibo-mark', marked.join(','))
+    }
+
+    getListColor = (date: string) => {
+        const delta = (dayjs().valueOf() - dayjs(date).valueOf()) / 60000
+
+        if (delta < 5) return 'red'
+        else if (delta < 15) return 'yellow'
+        else if (delta < 12*60) return 'black'
+        else return 'gray'
     }
 
     highlightKeyword = (content: string) => {
@@ -121,4 +147,14 @@ export default class HotListStore {
 
         return createElement(Fragment, { children: info })
     }
+
+    autoRefresh = () => {
+        this.onRefresh()
+        this.timer = setInterval(this.onRefresh, 60000) as any
+
+        const saved = localStorage.getItem('weibo-mark')
+        this.marked = saved ? saved.split(',') : []
+    }
+
+    onDestory = () => { clearInterval(this.timer) }
 }

@@ -1,1 +1,63 @@
-.hotlist a.black:hover .keyword-highlight { color: #ffa39e; }
+.hotlist, .warp .weibo-list .item {
+    a.black:hover .keyword-highlight { color: #ffa39e; }
+}
+
+.warp .weibo-list {
+    position: relative;
+    border: 6px solid #d52c2b;
+    border-radius: 18px;
+    padding: 12px 9px;
+    // background-color: #eee;
+
+    .title {
+        writing-mode: vertical-lr;
+        position: absolute;
+        left: -45px;
+        top: 36px;
+        background-color: #d52c2b;
+        color: #ffaa51;
+        font-weight: bold;
+        font-size: 24px;
+        padding: 12px 6px;
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+    }
+
+    .item {
+        margin-bottom: 6px;
+        &:last-child { margin-bottom: 0; }
+
+        .mark {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .No {
+            text-align: right;
+            display: inline-block;
+            width: 20px;
+            margin-right: 6px;
+        }
+    }
+
+    .cut-line {
+        height: 100%;
+        width: 2px;
+        position: absolute;
+        top: 0;
+        left: 31px;
+        background-color: #eee;
+    }
+
+    .info {
+        text-align: center;
+        display: flex;
+        width: 80%;
+        min-width: 400px;
+        position: relative;
+        left: 10%;
+        margin-bottom: 12px;
+
+        a {flex-grow: 1;}
+    }
+}
