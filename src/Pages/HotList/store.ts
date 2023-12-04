@@ -59,7 +59,7 @@ export default class HotListStore {
             this.span += minutes / 60
 
             const cache = [] as { date: string, items: Items }[]
-            data.filter(item => item.platform !== 8).forEach(item => {
+            data.forEach(item => {
                 const date = item.date.slice(5, -3)
                 const platform = item.date.slice(-2)
                 const content = this.highlightKeyword(item.content)

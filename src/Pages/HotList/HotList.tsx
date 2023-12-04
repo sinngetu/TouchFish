@@ -73,17 +73,21 @@ const HotList: React.FC<Props> = props => {
               </div>
 
               {store.weiboList.map((item, i) => (
-                <div className='item' key={item.hash}>
-                  <span className='mark' onClick={() => onMark(item.hash)}>
-                    {marked.includes(item.hash)
-                      ? <StarFilled style={{ color: '#fbca0d' }} />
-                      : <StarOutlined style={{ color: '#ccc' }} />
-                    }
-                  </span>
+                <>
+                  <div className='item' key={item.hash}>
+                    <span className='mark' onClick={() => onMark(item.hash)}>
+                      {marked.includes(item.hash)
+                        ? <StarFilled style={{ color: '#fbca0d' }} />
+                        : <StarOutlined style={{ color: '#ccc' }} />
+                      }
+                    </span>
 
-                  <span className='No'>{i+1}.</span>
-                  <a className={getListColor(item.date)} target='_blank' href={item.link}>{highlightKeyword(item.content)}</a>
-                </div>
+                    <span className='No'>{i+1}.</span>
+                    <a className={getListColor(item.date)} target='_blank' href={item.link}>{highlightKeyword(item.content)}</a>
+                  </div>
+
+                  {i === 9 ? <div style={{ borderBottom: '3px solid #eee', marginBottom: 6 }} /> : null}
+                </>
               ))}
             </div>
           ) : null}
