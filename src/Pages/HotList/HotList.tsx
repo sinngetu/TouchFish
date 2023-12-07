@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Button, Timeline } from 'antd'
 import { DownOutlined, ReloadOutlined, SettingOutlined, StarOutlined, StarFilled, SyncOutlined, WeiboOutlined } from '@ant-design/icons'
@@ -73,7 +73,7 @@ const HotList: React.FC<Props> = props => {
               </div>
 
               {store.weiboList.map((item, i) => (
-                <>
+                <Fragment key={item.hash}>
                   <div className='item' key={item.hash}>
                     <span className='mark' onClick={() => onMark(item.hash)}>
                       {marked.includes(item.hash)
@@ -87,7 +87,7 @@ const HotList: React.FC<Props> = props => {
                   </div>
 
                   {i === 9 ? <div style={{ borderBottom: '3px solid #eee', marginBottom: 6 }} /> : null}
-                </>
+                </Fragment>
               ))}
             </div>
           ) : null}

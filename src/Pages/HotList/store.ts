@@ -151,8 +151,11 @@ export default class HotListStore {
     }
 
     notify = async (data: HotItem[]) => {
-        const important = data.filter(({ content, platform }) => {
+        const notified = (sessionStorage.getItem('notified') || '').split(',').filter(h => !!h)
+
+        const important = data.filter(({ hash, content, platform }) => {
             if (platform !== 8 && platform !== 9) return false
+            if (notified.includes(hash)) return false
             if (!(this.highlight.reduce((result, keyword) => result || content.includes(keyword), false))) return false
             return true
         })
@@ -160,10 +163,14 @@ export default class HotListStore {
         if (!important.length || !Notification || Notification.permission !== 'granted') return
 
         for(let i = 0; i < important.length; i++) {
+            const { content, hash } = important[i]
             if (i !== 0) await new Promise(r => setTimeout(r, 3000))
 
-            new Notification(important[i].content)
+            new Notification(content)
+            notified.push(hash)
         }
+
+        sessionStorage.setItem('notified', notified.join(','))
     }
 
     autoRefresh = () => {
