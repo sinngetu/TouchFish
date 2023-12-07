@@ -68,8 +68,8 @@ const HotList: React.FC<Props> = props => {
               <div className='info'>
                 <a className='red'>红色 &lt; 5分钟</a>
                 <a className='yellow'>黄色 &lt; 15分钟</a>
-                <a className='black'>黑色 &lt; 12小时</a>
-                <a className='gray'>灰色 &gt; 12小时</a>
+                <a className='black'>黑色 &lt; 6小时</a>
+                <a className='gray'>灰色 &gt; 6小时</a>
               </div>
 
               {store.weiboList.map((item, i) => (

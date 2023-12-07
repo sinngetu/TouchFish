@@ -58,6 +58,8 @@ export default class HotListStore {
         api.getList(start, end).then((data: HotItem[]) => runInAction(() => {
             this.span += minutes / 60
 
+            this.notify(data)
+
             const cache = [] as { date: string, items: Items }[]
             data.forEach(item => {
                 const date = item.date.slice(5, -3)
@@ -119,7 +121,7 @@ export default class HotListStore {
 
         if (delta < 5) return 'red'
         else if (delta < 15) return 'yellow'
-        else if (delta < 12*60) return 'black'
+        else if (delta < 6*60) return 'black'
         else return 'gray'
     }
 
@@ -146,6 +148,22 @@ export default class HotListStore {
         })
 
         return createElement(Fragment, { children: info })
+    }
+
+    notify = async (data: HotItem[]) => {
+        const important = data.filter(({ content, platform }) => {
+            if (platform !== 8 && platform !== 9) return false
+            if (!(this.highlight.reduce((result, keyword) => result || content.includes(keyword), false))) return false
+            return true
+        })
+
+        if (!important.length || !Notification || Notification.permission !== 'granted') return
+
+        for(let i = 0; i < important.length; i++) {
+            if (i !== 0) await new Promise(r => setTimeout(r, 3000))
+
+            new Notification(important[i].content)
+        }
     }
 
     autoRefresh = () => {
