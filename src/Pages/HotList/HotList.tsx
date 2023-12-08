@@ -94,6 +94,8 @@ const HotList: React.FC<Props> = props => {
         </div>
       </div>
 
+      <audio id="notify-audio" src="/notify.wav" />
+
       <div style={{ borderTop: '3px solid #4096ff', paddingTop: 12 }}>
         已加载<span style={{ margin: '0 2px', color: '#1677ff' }}>{span}小时</span>数据
         <Button

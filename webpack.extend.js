@@ -7,9 +7,7 @@ exports.addLessLoader = (loaderOptions = {}, customCssModules = {}) => config =>
   const { localIdentName } = loaderOptions
   let cssModules = loaderOptions.cssModules || { localIdentName }
 
-  if (!cssModules.localIdentName) {
-    cssModules = customCssModules
-  }
+  if (!cssModules.localIdentName) { cssModules = customCssModules }
 
   cssModules.localIdentName = cssModules.localIdentName || "[local]--[hash:base64:5]"
 
@@ -60,17 +58,13 @@ exports.addLessLoader = (loaderOptions = {}, customCssModules = {}) => config =>
       loaders.push(
         {
           loader: require.resolve("resolve-url-loader"),
-          options: {
-            sourceMap: isEnvProduction && shouldUseSourceMap
-          }
+          options: { sourceMap: isEnvProduction && shouldUseSourceMap }
         },
         {
           loader: require.resolve(preProcessor),
           // not the same as react-scripts
           options: Object.assign(
-            {
-              sourceMap: true
-            },
+            { sourceMap: true },
             loaderOptions
           )
         }
@@ -79,8 +73,7 @@ exports.addLessLoader = (loaderOptions = {}, customCssModules = {}) => config =>
     return loaders
   }
 
-  const loaders = config.module.rules.find(rule => Array.isArray(rule.oneOf))
-    .oneOf
+  const loaders = config.module.rules.find(rule => Array.isArray(rule.oneOf)).oneOf
 
   // Insert less-loader as the penultimate item of loaders (before file-loader)
   loaders.splice(
@@ -109,9 +102,7 @@ exports.addLessLoader = (loaderOptions = {}, customCssModules = {}) => config =>
             sourceMap: isEnvProduction && shouldUseSourceMap
           },
           cssLoaderOptions,
-          {
-            modules: cssModules
-          }
+          { modules: cssModules }
         ),
         "less-loader"
       )
@@ -120,6 +111,3 @@ exports.addLessLoader = (loaderOptions = {}, customCssModules = {}) => config =>
 
   return config
 }
-
-
-

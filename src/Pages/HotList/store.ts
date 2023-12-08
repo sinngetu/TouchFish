@@ -151,6 +151,7 @@ export default class HotListStore {
     }
 
     notify = async (data: HotItem[]) => {
+        const audio = document.getElementById('notify-audio') as HTMLAudioElement
         const notified = (sessionStorage.getItem('notified') || '').split(',').filter(h => !!h)
 
         const important = data.filter(({ hash, content, platform }) => {
@@ -166,7 +167,8 @@ export default class HotListStore {
             const { content, hash } = important[i]
             if (i !== 0) await new Promise(r => setTimeout(r, 3000))
 
-            new Notification(content)
+            audio.play()
+            new Notification(content, { silent: true })
             notified.push(hash)
         }
 
