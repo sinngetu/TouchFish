@@ -21,8 +21,16 @@ const Overseas: React.FC<Props> = props => {
   const { media, data, loading, span, presets, formInit, hasCut, disabledDate, highlightKeyword, onCopy, onSearch } = store
   const [form] = Form.useForm()
 
+  const getMediumName = useCallback((id: number) => {
+    switch (id) {
+      case 99999: return '推特'
+      case 99998: return '中国足协'
+      default: return media.get(id)?.name
+    }
+  }, [media])
+
   const columes: ColumnsType<News> = useMemo(() => [
-    { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', align: 'center', render: id => id === 99999 ? '推特' : media.get(id)?.name },
+    { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', align: 'center', render: getMediumName },
     { width: 105, key: 'keyword', dataIndex: 'keyword', title: '搜索关键词' },
     { key: 'title', dataIndex: 'title', title: '标题', render: (text, data, i) => (
       <>
