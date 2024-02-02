@@ -1,42 +1,67 @@
-import { Suspense } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
-import { FloatButton, Layout, Tabs } from 'antd'
+import { Button, FloatButton, Layout, Tabs } from 'antd'
+import { SettingOutlined } from '@ant-design/icons'
+
+import { backTop } from '@/utils/function'
+import TabManage, { Ref as TabManageRef } from '@/common/TabManage'
 
 import routes, { tabItems, defaultPath } from './routes'
 import Loading from './Loading'
-import { backTop } from '@/utils/function'
 import './index.less'
 
 const { Header, Content } = Layout
 const { BackTop } = FloatButton
 
-export default () => (
-  <Layout>
-    <Header style={{ display: 'flex', alignItems: 'center' }}>
-      <h1 style={{ color: '#fff' }}>摸舆平台</h1>
-    </Header>
+export default () => {
+  const [showTabs, setShowTabs] = useState<string[]>(localStorage.getItem('show-tabs')?.split(',') || [])
+  const tabManage = useRef<TabManageRef>(null)
 
-    <Content id="content">
-      <Tabs
-        id='page-tabs'
-        type='card'
-        defaultActiveKey={defaultPath}
-        items={tabItems}
-        onChange={path => window.location.hash = `#${path}`}
-      />
+  return (
+    <Layout>
+      <Header style={{ display: 'flex', alignItems: 'center' }}>
+        <h1 style={{ color: '#fff' }}>摸舆平台</h1>
+      </Header>
 
-      <Suspense>
-        <RouterProvider
-          router={createHashRouter(routes)}
-          fallbackElement={<Loading />}
+      <Content id="content">
+        <Button
+          type="link"
+          icon={<SettingOutlined />}
+          onClick={() => tabManage.current?.onShow()}
+          style={{ position: 'absolute', right: 50, top: showTabs.length ? undefined : 64, zIndex: 1 }}
+        >标签栏管理</Button>
+
+        <Tabs
+          id="page-tabs"
+          type="card"
+          defaultActiveKey={defaultPath}
+          items={tabItems.filter(item => showTabs.includes(item.key))}
+          onChange={path => window.location.hash = `#${path}`}
         />
-      </Suspense>
 
-      <BackTop
-        visibilityHeight={0}
-        type='primary'
-        onClick={() => backTop(document.getElementById('content') as HTMLElement)}
-      />
-    </Content>
-  </Layout>
-)
+        <Suspense>
+          <RouterProvider
+            router={createHashRouter(routes)}
+            fallbackElement={<Loading />}
+          />
+        </Suspense>
+
+        <BackTop
+          visibilityHeight={0}
+          type='primary'
+          onClick={() => backTop(document.getElementById('content') as HTMLElement)}
+        />
+
+        <TabManage
+          ref={tabManage}
+          tabs={tabItems}
+          initShow={showTabs}
+          onChange={keys => {
+            setShowTabs(keys)
+            localStorage.setItem('show-tabs', keys.join(','))
+          }}
+        />
+      </Content>
+    </Layout>
+  )
+}
