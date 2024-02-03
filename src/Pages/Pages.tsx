@@ -1,4 +1,4 @@
-import { Suspense, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import { Button, FloatButton, Layout, Tabs } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
@@ -16,6 +16,11 @@ const { BackTop } = FloatButton
 export default () => {
   const [showTabs, setShowTabs] = useState<string[]>(localStorage.getItem('show-tabs')?.split(',') || [])
   const tabManage = useRef<TabManageRef>(null)
+
+  useEffect(() => {
+    if (Notification && Notification.permission === 'default')
+      Notification.requestPermission()
+  }, [])
 
   return (
     <Layout>
@@ -61,6 +66,8 @@ export default () => {
             localStorage.setItem('show-tabs', keys.join(','))
           }}
         />
+
+        <audio id="notify-audio" src="/notify.wav" />
       </Content>
     </Layout>
   )

@@ -152,7 +152,7 @@ export default class HotListStore {
 
     notify = async (data: HotItem[]) => {
         const audio = document.getElementById('notify-audio') as HTMLAudioElement
-        const notified = (sessionStorage.getItem('notified') || '').split(',').filter(h => !!h)
+        const notified = (sessionStorage.getItem('hotlist-notified') || '').split(',').filter(h => !!h)
 
         const important = data.filter(({ hash, content, platform }) => {
             if (platform !== 8 && platform !== 9) return false
@@ -172,7 +172,7 @@ export default class HotListStore {
             notified.push(hash)
         }
 
-        sessionStorage.setItem('notified', notified.join(','))
+        sessionStorage.setItem('hotlist-notified', notified.join(','))
     }
 
     autoRefresh = () => {

@@ -130,6 +130,7 @@ export default class OverseasStore {
         api.getNews(params).then((data: News[]) => runInAction(() => {
             const mark = new Set<string>()
 
+            this.notify(data)
             this.span = Number((((value ? end : this.recent) - start) / 3600000).toFixed(2))
             this.data = [...this.data, ...data].filter(({ hash }) => {
                 const discarded = mark.has(hash)
@@ -173,5 +174,31 @@ export default class OverseasStore {
         })
 
         return createElement(Fragment, { children: info })
+    }
+
+    notify = async (data: News[]) => {
+        const audio = document.getElementById('notify-audio') as HTMLAudioElement
+        const notified = (sessionStorage.getItem('news-notified') || '').split(',').filter(h => !!h)
+        const importantMedia = [1, 4, 21, 22, 23, 24, 25, 26, 27, 64]
+
+        const important = data.filter(({ hash, title, medium }) => {
+            if (!importantMedia.includes(medium)) return false
+            if (notified.includes(hash)) return false
+            if (!(this.highlight.reduce((result, keyword) => result || title.includes(keyword), false))) return false
+            return true
+        })
+
+        if (!important.length || !Notification || Notification.permission !== 'granted') return
+
+        for(let i = 0; i < important.length; i++) {
+            const { title, hash } = important[i]
+            if (i !== 0) await new Promise(r => setTimeout(r, 3000))
+
+            audio.play()
+            new Notification(title, { silent: true })
+            notified.push(hash)
+        }
+
+        sessionStorage.setItem('news-notified', notified.join(','))
     }
 }
