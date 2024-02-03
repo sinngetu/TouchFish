@@ -12,6 +12,7 @@ import api from '@/api/news'
 import Store from './store'
 import { News } from './interface'
 import TagManage, { Ref as TagManageRef } from './TagManage'
+import SearchManage, { Ref as SearchManageRef } from './SearchManage'
 import TagItem from './TagItem'
 
 import './index.less'
@@ -25,6 +26,7 @@ const Overseas: React.FC<Props> = props => {
   const [store] = useState(new Store(props.appStore))
   const { media, data, loading, span, presets, formInit, hasCut, disabledDate, highlightKeyword, onCopy, onTagTheNews, onSearch } = store
   const tagManage = useRef<TagManageRef>(null)
+  const searchManage = useRef<SearchManageRef>(null)
   const keywordManage = useRef<KeywordManageRef>(null)
   const [form] = Form.useForm()
 
@@ -133,16 +135,18 @@ const Overseas: React.FC<Props> = props => {
   const manageMenu: MenuProps = useMemo(() => ({
     items: [
       { key: 'tag', label: '标签管理' },
-      { key: 'keyword', label: '关键词管理' }
+      { key: 'keyword', label: '关键词管理' },
+      { key: 'search', label: 'Google搜索管理' }
     ],
 
     onClick: ({ key }) => {
       switch (key) {
         case 'tag': return tagManage.current?.onShow()
+        case 'search': return searchManage.current?.onShow()
         case 'keyword': return keywordManage.current?.onShow()
       }
     }
-  }), [tagManage, keywordManage])
+  }), [tagManage, searchManage, keywordManage])
 
   useEffect(() => { onSearch(formInit) }, [])
 
@@ -242,6 +246,7 @@ const Overseas: React.FC<Props> = props => {
         />
 
         <TagManage ref={tagManage} />
+        <SearchManage ref={searchManage} />
         <KeywordManage
           ref={keywordManage}
           keywordIndex={2}
