@@ -14,7 +14,7 @@ const { Header, Content } = Layout
 const { BackTop } = FloatButton
 
 export default () => {
-  const [showTabs, setShowTabs] = useState<string[]>(localStorage.getItem('show-tabs')?.split(',') || [])
+  const [showTabs, setShowTabs] = useState<string[]>(localStorage.getItem('show-tabs')?.split(',').filter(v => !!v) || [])
   const tabManage = useRef<TabManageRef>(null)
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default () => {
           type="link"
           icon={<SettingOutlined />}
           onClick={() => tabManage.current?.onShow()}
-          style={{ position: 'absolute', right: 50, top: showTabs.length ? undefined : 64, zIndex: 1 }}
+          style={{ float: 'right', top: showTabs.length ? undefined : -32, zIndex: 1 }}
         >标签栏管理</Button>
 
         <Tabs
