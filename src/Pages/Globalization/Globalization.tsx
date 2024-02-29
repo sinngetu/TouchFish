@@ -38,7 +38,17 @@ const Globalization: React.FC = () => {
           <h4>■&nbsp;{platform}{platform === '未成功抓取' ? null : `（共${data[platform].length}篇，其中${getCount(data[platform])}）`}</h4>
           {data[platform].map((v, i) => platform === '未成功抓取'
             ? <div>{i + 1}{v.prefix}<a href={v.url} target="_blank">{v.url}</a></div>
-            : <div>{i + 1}{v.prefix}<a href={v.url} target="_blank">{v.content}</a>（{v.username}{v.total === '0' ? '' : `，互动量：${v.total}`}）</div>
+            : (
+              <div>
+                {i + 1}{v.prefix}<a href={v.url} target="_blank">{v.content}</a>
+                （
+                {v.username}
+                {v.total === '0' ? '' : `，互动量：${v.total}`}
+                {v.like ? `，点赞量：${v.like}` : ''}
+                {v.fans ? `，粉丝量：${v.fans}` : ''}
+                ）
+              </div>
+            )
           )}
         </div>
       ))}

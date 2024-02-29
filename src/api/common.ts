@@ -26,6 +26,8 @@ export interface Globalization {
         username: string
         total: string
         prefix: string
+        like?: string
+        fans?: string
     }[]
 }
 
