@@ -31,7 +31,7 @@ const SearchManage = forwardRef<Ref, Props>((props, ref) => {
 
   const columns: ColumnsType<Keyword> = useMemo(() => [
     { dataIndex: 'word', title: '关键词', width: 130, editable: true },
-    { dataIndex: 'extend', title: '搜索链接', editable: true },
+    { dataIndex: 'extend', title: '搜索链接', ellipsis: true, editable: true },
     { dataIndex: 'operation', title: '操作', width: 70, render: (_: string, data: Keyword) => {
       const editLinkStyle = editLoading ? { cursor: 'pointer', color: '#91caff' } : undefined
 
