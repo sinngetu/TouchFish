@@ -16,7 +16,7 @@ const { RangePicker } = DatePicker
 
 interface Props { appStore: AppStore }
 
-const Overseas: React.FC<Props> = props => {
+const Inland: React.FC<Props> = props => {
   const [store] = useState(new Store(props.appStore))
   const { media, data, loading, span, presets, formInit, hasCut, disabledDate, highlightKeyword, onCopy, onSearch } = store
   const [form] = Form.useForm()
@@ -50,7 +50,7 @@ const Overseas: React.FC<Props> = props => {
   useEffect(() => { onSearch(formInit) }, [])
 
   return (
-    <Provider overseasStore={store}>
+    <Provider InlandStore={store}>
       <div className="warp">
         <div className="toolbar">
           <Form
@@ -135,4 +135,4 @@ const Overseas: React.FC<Props> = props => {
   )
 }
 
-export default inject('appStore')(observer(Overseas))
+export default inject('appStore')(observer(Inland))
