@@ -31,7 +31,6 @@ const Inland: React.FC<Props> = props => {
 
   const columes: ColumnsType<News> = useMemo(() => [
     { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', align: 'center', render: getMediumName },
-    { width: 105, key: 'keyword', dataIndex: 'keyword', title: '搜索关键词' },
     { key: 'title', dataIndex: 'title', title: '标题', render: (text, data, i) => (
       <>
         {highlightKeyword(text)}
