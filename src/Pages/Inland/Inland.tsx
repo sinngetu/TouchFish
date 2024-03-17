@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Provider, inject, observer } from 'mobx-react'
-import { Button, DatePicker, Divider, Form, Input, Table, Tooltip } from 'antd'
-import { CopyOutlined, DownOutlined, LinkOutlined, UndoOutlined, SearchOutlined } from '@ant-design/icons'
+import { Button, DatePicker, Divider, Dropdown, Form, Input, MenuProps, Table, Tooltip } from 'antd'
+import { CopyOutlined, DownOutlined, LinkOutlined, UndoOutlined, SearchOutlined, SettingOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
 
 import AppStore from '@/store'
+import KeywordManage, { Ref as KeywordManageRef } from '@/common/KeywordManage'
+import api from '@/api/news'
 
 import Store from './store'
 import { News } from './interface'
@@ -19,6 +21,7 @@ interface Props { appStore: AppStore }
 const Inland: React.FC<Props> = props => {
   const [store] = useState(new Store(props.appStore))
   const { media, data, loading, span, presets, formInit, hasCut, disabledDate, highlightKeyword, onCopy, onSearch } = store
+  const keywordManage = useRef<KeywordManageRef>(null)
   const [form] = Form.useForm()
 
   const getMediumName = useCallback((id: number) => {
@@ -45,6 +48,22 @@ const Inland: React.FC<Props> = props => {
       </>
     ) }
   ], [media])
+
+  const rowClassName = useCallback((record: News, i: number) => {
+    return hasCut(i) ? 'cut-line' : ''
+  }, [hasCut])
+
+  const manageMenu: MenuProps = useMemo(() => ({
+    items: [
+      { key: 'keyword', label: '关键词管理' },
+    ],
+
+    onClick: ({ key }) => {
+      switch (key) {
+        case 'keyword': return keywordManage.current?.onShow()
+      }
+    }
+  }), [keywordManage])
 
   useEffect(() => { onSearch(formInit) }, [])
 
@@ -105,6 +124,14 @@ const Inland: React.FC<Props> = props => {
             </span>
             条数据
           </span>
+
+          <Dropdown menu={manageMenu}>
+            <Button
+              type="link"
+              icon={<SettingOutlined />}
+              style={{ position: 'absolute', right: 0, top: 0 }}
+            >管理</Button>
+          </Dropdown>
         </div>
 
         <Table
@@ -113,6 +140,7 @@ const Inland: React.FC<Props> = props => {
           loading={loading}
           dataSource={data}
           columns={columes}
+          rowClassName={rowClassName}
           pagination={false}
           footer={() => (
             <div
@@ -130,6 +158,13 @@ const Inland: React.FC<Props> = props => {
           )}
         />
       </div>
+
+      <KeywordManage
+        ref={keywordManage}
+        keywordIndex={5}
+        addAPI={api.addKeyword}
+        delAPI={api.delKeyword}
+      />
     </Provider>
   )
 }
