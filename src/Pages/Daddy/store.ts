@@ -67,6 +67,8 @@ export default class DaddyStore {
     onGetMoreNews = () => this.getList(30)
 
     highlightKeyword = (content: string) => {
+        if (typeof content !== 'string') return content
+
         let info: (string | JSX.Element)[] = [content]
 
         this.highlight.forEach(word => {

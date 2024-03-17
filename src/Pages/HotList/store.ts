@@ -126,6 +126,8 @@ export default class HotListStore {
     }
 
     highlightKeyword = (content: string) => {
+        if (typeof content !== 'string') return content
+
         let info: (string | JSX.Element)[] = [content]
 
         this.highlight.forEach(word => {

@@ -152,6 +152,8 @@ export default class OverseasStore {
     }
 
     highlightKeyword = (content: string) => {
+        if (typeof content !== 'string') return content
+
         let info: (string | JSX.Element)[] = [content.toLowerCase()]
 
         this.highlight.forEach(word => {
