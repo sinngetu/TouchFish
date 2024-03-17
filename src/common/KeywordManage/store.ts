@@ -9,9 +9,11 @@ export default class KeywordManageStore {
         makeAutoObservable(this)
 
         appStore.getKeyword().then(keyword => this.keywords = keyword[keywordIndex] || [])
+        this.index = keywordIndex
         this.api = { addAPI, delAPI }
     }
 
+    index: number
     api: { addAPI: Props['addAPI'], delAPI: Props['delAPI'] }
     keywords: Keyword[] = []
     show: boolean = false
@@ -36,7 +38,7 @@ export default class KeywordManageStore {
         }
 
         this.addLoading = true
-        this.api.addAPI(word).then(({ id }) => runInAction(() => {
+        this.api.addAPI(word, this.index).then(({ id }) => runInAction(() => {
             const newKeywords = [...this.keywords, { id, word }]
 
             message.success('添加成功~页面刷新后生效')

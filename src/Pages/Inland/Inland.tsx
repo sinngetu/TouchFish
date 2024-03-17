@@ -24,13 +24,7 @@ const Inland: React.FC<Props> = props => {
   const keywordManage = useRef<KeywordManageRef>(null)
   const [form] = Form.useForm()
 
-  const getMediumName = useCallback((id: number) => {
-    switch (id) {
-      case 99999: return '推特'
-      case 99998: return '中国足协'
-      default: return media.get(id)?.name
-    }
-  }, [media])
+  const getMediumName = useCallback((id: number) => media.get(id)?.name, [media])
 
   const columes: ColumnsType<News> = useMemo(() => [
     { width: 150, key: 'medium', dataIndex: 'medium', title: '媒体', align: 'center', render: getMediumName },
