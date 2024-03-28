@@ -23,7 +23,7 @@ export default class InlandStore {
         makeAutoObservable(this)
 
         appStore.getMedia().then(media => this.media = media)
-        appStore.getKeyword().then(keyword => this.highlight = (keyword[2] || []).map(({ word }) => word))
+        appStore.getKeyword().then(keyword => this.highlight = (keyword[5] || []).map(({ word }) => word))
     }
 
     // private
