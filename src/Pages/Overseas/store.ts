@@ -60,9 +60,9 @@ export default class OverseasStore {
 
     onCopy = (record: News) => {
         const info = [record.title, record.link]
-        const el = document.getElementById(`a-${record.hash}`)?.parentElement?.parentElement?.firstElementChild?.nextElementSibling?.nextElementSibling?.querySelector('font.immersive-translate-target-inner')
+        const el = document.getElementById(`a-${record.hash}`)?.parentElement?.parentElement?.firstElementChild?.nextElementSibling?.nextElementSibling?.querySelector('font.immersive-translate-target-inner') as HTMLFontElement
 
-        if (el) info.splice(1, 0, el.innerHTML)
+        if (el) info.splice(1, 0, el.innerText)
 
         const text = info.join('\n')
 
