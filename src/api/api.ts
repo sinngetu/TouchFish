@@ -56,15 +56,22 @@ function resultHandle(config: AxiosRequestConfig, operate: () => Promise<any>) {
   return result
 }
 
+// Intercept the response and error handle it
 function resolveHandle(res: AxiosResponse<any>) {
-  return res.data
+  const { code, message, data } = res.data
+
+  if (code !== 0) {
+    return Promise.reject(message)
+  }
+
+  return data
 }
 
-function rejectHandle(err: Error | string[]) {
+function rejectHandle(err: Error | string) {
   if (err instanceof Error) {
     message.error(err.message || '网络错误!')
     return Promise.reject([err.message])
   }
 
-  return Promise.reject(err as string[])
+  return Promise.reject(err as string)
 }
