@@ -20,6 +20,7 @@ const colors: { [id: string]: CSSProperties  } = {
     '09': { color: '#fff', backgroundColor: '#06f', borderColor: '#06f' },
     '10': { color: '#e10602', backgroundColor: '#fff', borderColor: '#2932e1' },
     '11': { color: '#f04142', backgroundColor: '#fff', borderColor: '#f04142' },
+    '13': { color: '#fff', backgroundColor: '#ee1a1a', borderColor: '#ee1a1a' },
 }
 
 export default class HotListStore {

@@ -127,6 +127,8 @@ const Overseas: React.FC<Props> = props => {
     if (m === 22 || m === 23) className += 'ft'
     if (m === 24) className += 'reuters'
     if (m === 26) className += 'bloomberg'
+    if (m === 33) className += 'nikkei'
+    if (m === 3) className += 'scmp'
     if (hasCut(i)) className += ' cut-line'
 
     return className
