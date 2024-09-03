@@ -30,9 +30,9 @@ export default class BossStore {
         if (this.loading) return
 
         this.loading = true
-        const end = this.earliesy.valueOf()
+        const end = this.earliesy.format()
         this.earliesy = this.earliesy.subtract(minutes, "minute")
-        const start = this.earliesy.valueOf()
+        const start = this.earliesy.format()
 
         api.getBossNews(start, end).then((data: BossInfo[]) => runInAction(() => {
             this.span += minutes / 60

@@ -13,8 +13,8 @@ import { Fragment, createElement } from 'react'
 interface Params {
     title?: string
     tags?: number[]
-    start: number
-    end: number
+    start: Dayjs
+    end: Dayjs
     status: number
 }
 
@@ -28,7 +28,7 @@ export default class InlandStore {
 
     // private
     recent: number = 0
-    params: Params = { start: 0, end: 0, status: 2 }
+    params: Params = { start: dayjs(), end: dayjs(), status: 2 }
     highlight: string[] = []
 
     // public
@@ -69,13 +69,13 @@ export default class InlandStore {
             this.params = {
                 title: !!title ? title : undefined,
                 tags: (tags && tags.length) ? tags : undefined,
-                start: start.valueOf(),
-                end: end.valueOf(),
+                start,
+                end,
                 status: 2
             }
         } else {
-            this.params.start = this.params.start - 1800000
-            this.params.end = this.params.end - 1800000
+            this.params.start = this.params.start.subtract(30, "minute")
+            this.params.end = this.params.end.subtract(30, "minute")
         }
 
         return this.params
@@ -86,12 +86,17 @@ export default class InlandStore {
 
         const params = this.getParams(value)
         const { start, end } = params
+        const _params = {
+            ...params,
+            start: start.format(),
+            end: end.format()
+        }
 
         this.loading = true
-        api.getNews(params).then((data: News[]) => runInAction(() => {
+        api.getNews(_params).then((data: News[]) => runInAction(() => {
             const mark = new Set<string>()
 
-            this.span = Number((((value ? end : this.recent) - start) / 3600000).toFixed(2))
+            this.span = Number((((value ? end.valueOf() : this.recent) - start.valueOf()) / 3600000).toFixed(2))
             this.data = [...this.data, ...data].filter(({ hash }) => {
                 const discarded = mark.has(hash)
 

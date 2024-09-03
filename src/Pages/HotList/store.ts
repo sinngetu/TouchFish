@@ -52,9 +52,9 @@ export default class HotListStore {
         if (this.loading) return
 
         this.loading = true
-        const end = this.earliesy.valueOf()
+        const end = this.earliesy.format()
         this.earliesy = this.earliesy.subtract(minutes, "minute")
-        const start = this.earliesy.valueOf()
+        const start = this.earliesy.format()
 
         api.getList(start, end).then((data: HotItem[]) => runInAction(() => {
             this.span += minutes / 60
