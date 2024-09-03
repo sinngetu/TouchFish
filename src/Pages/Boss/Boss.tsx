@@ -7,7 +7,7 @@ import Store from './store'
 
 import './index.less'
 
-const Daddy: React.FC = () => {
+const Boss: React.FC = () => {
   const [store] = useState(new Store())
   const { loading, span, onRefresh, onGetMoreNews } = store
 
@@ -51,4 +51,4 @@ const Daddy: React.FC = () => {
   )
 }
 
-export default observer(Daddy)
+export default observer(Boss)

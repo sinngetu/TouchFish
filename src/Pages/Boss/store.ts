@@ -3,12 +3,12 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Fragment, createElement } from 'react'
 import { TimelineItemProps } from 'antd/es/timeline'
 
-import api from '@/api/daddy'
-import { DaddyInfo } from './interface'
+import api from '@/api/news'
+import { BossInfo } from './interface'
 
 type Items = TimelineItemProps[]
 
-export default class DaddyStore {
+export default class BossStore {
     constructor() { makeAutoObservable(this) }
 
     // private
@@ -34,7 +34,7 @@ export default class DaddyStore {
         this.earliesy = this.earliesy.subtract(minutes, "minute")
         const start = this.earliesy.valueOf()
 
-        api.getList(start, end).then((data: DaddyInfo[]) => runInAction(() => {
+        api.getBossNews(start, end).then((data: BossInfo[]) => runInAction(() => {
             this.span += minutes / 60
 
             const cache = [] as { date: string, items: Items }[]
@@ -53,7 +53,7 @@ export default class DaddyStore {
                 })
             })
 
-            cache.forEach(({ date, items }) => items[0].label = createElement('span', { children: date, className: 'daddy-info-time' }))
+            cache.forEach(({ date, items }) => items[0].label = createElement('span', { children: date, className: 'boss-info-time' }))
 
             this.list = [...this.list, ...(cache.map(({ items }) => items).flat())]
         })).finally(() => runInAction(() => this.loading = false))

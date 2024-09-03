@@ -1,4 +1,4 @@
-export interface DaddyInfo {
+export interface BossInfo {
     hash: string
     content: string
     link: string

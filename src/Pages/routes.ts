@@ -4,8 +4,7 @@ import { redirect, RouteObject } from 'react-router-dom'
 import Inland from './Inland'
 import Overseas from './Overseas'
 import HotList from './HotList'
-import Daddy from './Daddy'
-import Globalization from './Globalization'
+import Boss from './Boss'
 import Wanda from './Wanda'
 
 type C = ComponentType<any>
@@ -16,8 +15,7 @@ const pages = [
   { label: '境内媒体', path: '/inland', component: Inland },
   { label: '境外媒体', path: '/overseas', component: Overseas },
   { label: '热榜', path: '/hotlist', component: HotList },
-  { label: '高层动态', path: '/daddy', component: Daddy },
-  { label: '全球化', path: '/globalization', component: Globalization },
+  { label: '高层动态', path: '/boss', component: Boss },
   { label: '万达', path: '/wanda', component: Wanda },
 ]
 
