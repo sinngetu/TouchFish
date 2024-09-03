@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import qs from 'qs'
 import { message } from 'antd'
 
 interface API {
@@ -20,7 +21,8 @@ const baseURL: string = process.env.NODE_ENV === 'production'
 const api = axios.create({
   baseURL,
   timeout: 0,
-  withCredentials: true
+  withCredentials: true,
+  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
 })
 
 const exportApi: API = {
