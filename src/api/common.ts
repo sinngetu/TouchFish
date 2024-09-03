@@ -32,8 +32,7 @@ export interface Globalization {
 }
 
 export default {
-    getMedia: () => api.get<RawMedium[]>('/common/media'),
-    getKeyword: () => api.get<RawKeyword[]>('/common/keyword'),
-    getPlatform: () => api.get<RawPlatform[]>('/common/platform'),
-    getGlobalization: (urls: string[]) => api.post<Globalization>('/common/globalization', { urls })
+    getMedia: api.only<RawMedium[]>(() => api.get('/common/media')),
+    getKeyword: api.only<RawKeyword[]>(() => api.get('/common/keyword')),
+    getPlatform: api.only<RawPlatform[]>(() => api.get('/common/platform')),
 }

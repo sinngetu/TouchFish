@@ -5,7 +5,9 @@ interface API {
   instance: AxiosInstance
   get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>
-  only: (request: (...params: any[]) => Promise<any>, handle?: (result: Promise<any>) => Promise<any>) => (...params: any[]) => Promise<any>
+  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>
+  delete<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>
+  only<T = any>(request: (...params: any[]) => Promise<any>, handle?: (result: Promise<any>) => Promise<any>): (...params: any[]) => Promise<T>
 }
 
 const cancelMap = new WeakMap<Promise<any>, () => void>()
@@ -25,6 +27,8 @@ const exportApi: API = {
   instance: api,
   get: (url, config = {}) => resultHandle(config, () => api.get(url, config)),
   post: (url, data, config = {}) => resultHandle(config, () => api.post(url, data, config)),
+  put: (url, data, config = {}) => resultHandle(config, () => api.put(url, data, config)),
+  delete: (url, config = {}) => resultHandle(config, () => api.delete(url, config)),
   only: (request, handle) => (...params) => {
     const result = request(...params)
     const prevResult = prevMap.get(request)
