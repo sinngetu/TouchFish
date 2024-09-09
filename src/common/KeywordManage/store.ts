@@ -38,7 +38,7 @@ export default class KeywordManageStore {
         }
 
         this.addLoading = true
-        this.api.addAPI(word, this.index).then(({ id }) => runInAction(() => {
+        this.api.addAPI(word, this.index).then(id => runInAction(() => {
             const newKeywords = [...this.keywords, { id, word }]
 
             message.success('添加成功~页面刷新后生效')
@@ -48,7 +48,7 @@ export default class KeywordManageStore {
         })).finally(() => runInAction(() => this.addLoading = false))
     }
 
-    onDel = (id: number) => () => this.api.delAPI(id).then(({ success }) => runInAction(() => {
+    onDel = (id: number) => () => this.api.delAPI(id).then(success => runInAction(() => {
         if (!success) return message.error('删除失败!')
         const newKeywords = [...this.keywords]
 

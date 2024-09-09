@@ -7,6 +7,6 @@ export interface Ref {
 export interface Props {
     appStore?: AppStore
     keywordIndex: number
-    addAPI: (content: string, type: number) => Promise<{ id: number }>
-    delAPI: (id: number) => Promise<{ success: boolean }>
+    addAPI: (content: string, type: number) => Promise<number>
+    delAPI: (id: number) => Promise<boolean>
 }
