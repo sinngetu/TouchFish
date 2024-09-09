@@ -26,7 +26,7 @@ export default class BossStore {
         this.span = 0
     }
 
-    getList = (minutes: number = 30) => {
+    getList = (minutes: number = 120) => {
         if (this.loading) return
 
         this.loading = true
@@ -64,7 +64,7 @@ export default class BossStore {
         this.getList()
     }
 
-    onGetMoreNews = () => this.getList(30)
+    onGetMoreNews = () => this.getList(120)
 
     highlightKeyword = (content: string) => {
         if (typeof content !== 'string') return content
