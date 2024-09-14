@@ -56,14 +56,14 @@ export default class TagManageStore {
             this.content,
             this.dominateColor,
             this.checked ? this.lightColor : undefined
-        ).then(({ id }) => this.parentStore.addTags(({ id, word: this.content, extend: JSON.stringify({ dominate: this.dominateColor, light: this.checked ? this.lightColor : undefined }) })))
+        ).then(id => this.parentStore.addTags(({ id, word: this.content, extend: JSON.stringify({ dominate: this.dominateColor, light: this.checked ? this.lightColor : undefined }) })))
          .finally(() => runInAction(() => this.addLoading = false ))
     }
 
     onSetDelID = (id: number) => this.delID = id
     resetDelID = () => this.delID = -1
 
-    onDel = (id: number) => () => api.delTags(id).then(({ success }) => runInAction(() => {
+    onDel = (id: number) => () => api.delTags(id).then(success => runInAction(() => {
         if (!success) return message.error('删除失败!')
 
         this.parentStore.delTags(id)

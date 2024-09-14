@@ -96,7 +96,7 @@ const Overseas: React.FC<Props> = props => {
           <span style={{ lineHeight: 2.14 }}>
             已加载
             <span style={{ margin: '0 6px', color: '#1677ff' }}>
-              {span}&nbsp;小时
+              {span === 0 ? '当天所有' : `${span} 小时`}
             </span>
             数据
             <Divider type="vertical" />
@@ -126,7 +126,7 @@ const Overseas: React.FC<Props> = props => {
             >
               <DownOutlined />
               &nbsp;更多&nbsp;
-              已加载<span style={{ margin: '0 2px', color: '#1677ff' }}>{span}小时</span>数据
+              已加载<span style={{ margin: '0 2px', color: '#1677ff' }}>{span === 0 ? '当天所有' : `${span}小时`}</span>数据
             </div>
           )}
         />

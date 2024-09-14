@@ -1,11 +1,14 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import qs from 'qs'
 import { message } from 'antd'
 
 interface API {
   instance: AxiosInstance
   get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>
-  only: (request: (...params: any[]) => Promise<any>, handle?: (result: Promise<any>) => Promise<any>) => (...params: any[]) => Promise<any>
+  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>
+  delete<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>
+  only<T = any>(request: (...params: any[]) => Promise<any>, handle?: (result: Promise<any>) => Promise<any>): (...params: any[]) => Promise<T>
 }
 
 const cancelMap = new WeakMap<Promise<any>, () => void>()
@@ -18,13 +21,16 @@ const baseURL: string = process.env.NODE_ENV === 'production'
 const api = axios.create({
   baseURL,
   timeout: 0,
-  withCredentials: true
+  withCredentials: true,
+  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
 })
 
 const exportApi: API = {
   instance: api,
   get: (url, config = {}) => resultHandle(config, () => api.get(url, config)),
   post: (url, data, config = {}) => resultHandle(config, () => api.post(url, data, config)),
+  put: (url, data, config = {}) => resultHandle(config, () => api.put(url, data, config)),
+  delete: (url, config = {}) => resultHandle(config, () => api.delete(url, config)),
   only: (request, handle) => (...params) => {
     const result = request(...params)
     const prevResult = prevMap.get(request)
@@ -56,15 +62,22 @@ function resultHandle(config: AxiosRequestConfig, operate: () => Promise<any>) {
   return result
 }
 
+// Intercept the response and error handle it
 function resolveHandle(res: AxiosResponse<any>) {
-  return res.data
+  const { code, message, data } = res.data
+
+  if (code !== 0) {
+    return Promise.reject(message)
+  }
+
+  return data
 }
 
-function rejectHandle(err: Error | string[]) {
+function rejectHandle(err: Error | string) {
   if (err instanceof Error) {
     message.error(err.message || '网络错误!')
     return Promise.reject([err.message])
   }
 
-  return Promise.reject(err as string[])
+  return Promise.reject(err as string)
 }

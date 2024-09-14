@@ -13,8 +13,8 @@ import { Fragment, createElement } from 'react'
 interface Params {
     title?: string
     tags?: number[]
-    start: number
-    end: number
+    start: Dayjs
+    end: Dayjs
     status: number
 }
 
@@ -29,7 +29,7 @@ export default class OverseasStore {
 
     // private
     recent: number = 0
-    params: Params = { start: 0, end: 0, status: 0 }
+    params: Params = { start: dayjs(), end: dayjs(), status: 0 }
     highlight: string[] = []
 
     // public
@@ -81,7 +81,9 @@ export default class OverseasStore {
         tags.sort()
 
         this.tagLoading = true
-        api.tagNews(hash, tags).then(({ success }) => runInAction(() => {
+        api.tagNews(hash, tags).then(success => runInAction(() => {
+            console.log(success)
+
             if (!success) {
                 message.error('新闻标记失败！请重试！')
                 return
@@ -102,19 +104,19 @@ export default class OverseasStore {
                 dayjs().subtract(30, "minute").startOf('minute'),
                 dayjs().startOf('minute')
             ]
-    
+
             this.data = []
             this.recent = end.valueOf()
             this.params = {
                 title: !!title ? title : undefined,
                 tags: (tags && tags.length) ? tags : undefined,
-                start: start.valueOf(),
-                end: end.valueOf(),
+                start,
+                end,
                 status: 0
             }
         } else {
-            this.params.start = this.params.start - 1800000
-            this.params.end = this.params.end - 1800000
+            this.params.start = this.params.start.subtract(30, "minute")
+            this.params.end = this.params.end.subtract(30, "minute")
         }
 
         return this.params
@@ -125,13 +127,18 @@ export default class OverseasStore {
 
         const params = this.getParams(value)
         const { start, end } = params
-
+        const _params = {
+            ...params,
+            start: start.format(),
+            end: end.format()
+        }
+        
         this.loading = true
-        api.getNews(params).then((data: News[]) => runInAction(() => {
+        api.getNews(_params).then((data: News[]) => runInAction(() => {
             const mark = new Set<string>()
 
             this.notify(data)
-            this.span = Number((((value ? end : this.recent) - start) / 3600000).toFixed(2))
+            this.span = Number((((value ? end.valueOf() : this.recent) - start.valueOf()) / 3600000).toFixed(2))
             this.data = [...this.data, ...data].filter(({ hash }) => {
                 const discarded = mark.has(hash)
 

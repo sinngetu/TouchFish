@@ -67,7 +67,7 @@ export default class SearchManageStore {
     onEdit = async (data: Keyword) => {
         this.editForm.validateFields().then(fields => runInAction(() => {
             this.editLoading = true
-            api.editSearch(data.id, fields.word, fields.extend).then(({ success }) => runInAction(() => {
+            api.editSearch(data.id, fields.word, fields.extend).then(success => runInAction(() => {
                 if (!success) return message.error('编辑失败!')
 
                 const newData: Keyword = { ...fields, id: data.id }
@@ -87,7 +87,7 @@ export default class SearchManageStore {
         const key = 'search-key-del'
 
         message.loading({ key, content: '删除中...', duration: 0 })
-        api.delSearch(data.id).then(({ success }) => runInAction(() => {
+        api.delSearch(data.id).then(success => runInAction(() => {
             if (!success) return message.error({ key, content: '删除失败！', duration: 2 })
 
             const newDataSource = [...this.dataSource]

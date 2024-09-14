@@ -13,8 +13,8 @@ import { Fragment, createElement } from 'react'
 interface Params {
     title?: string
     tags?: number[]
-    start: number
-    end: number
+    start: Dayjs
+    end: Dayjs
     status: number
 }
 
@@ -28,7 +28,7 @@ export default class WandaStore {
 
     // private
     recent: number = 0
-    params: Params = { start: 0, end: 0, status: 1 }
+    params: Params = { start: dayjs(), end: dayjs(), status: 1 }
     highlight: string[] = []
 
     // public
@@ -60,22 +60,22 @@ export default class WandaStore {
         if (value) {
             const { title, tags, time } = value
             const [start, end] = (time && time.length && time[0] !== undefined) ? time : [
-                dayjs().subtract(30, "minute").startOf('minute'),
+                dayjs().startOf('day'),
                 dayjs().startOf('minute')
             ]
-    
+
             this.data = []
             this.recent = end.valueOf()
             this.params = {
                 title: !!title ? title : undefined,
                 tags: (tags && tags.length) ? tags : undefined,
-                start: start.valueOf(),
-                end: end.valueOf(),
+                start,
+                end,
                 status: 1
             }
         } else {
-            this.params.start = this.params.start - 1800000
-            this.params.end = this.params.end - 1800000
+            this.params.start = this.params.start.subtract(1, "day")
+            this.params.end = this.params.end.subtract(1, "day")
         }
 
         return this.params
@@ -86,12 +86,21 @@ export default class WandaStore {
 
         const params = this.getParams(value)
         const { start, end } = params
+        const _params = {
+            ...params,
+            start: start.format(),
+            end: end.format()
+        }
 
         this.loading = true
-        api.getNews(params).then((data: News[]) => runInAction(() => {
+        api.getNews(_params).then((data: News[]) => runInAction(() => {
             const mark = new Set<string>()
 
-            this.span = Number((((value ? end : this.recent) - start) / 3600000).toFixed(2))
+            console.log(start.valueOf() / 1000, dayjs().startOf('day').valueOf() / 1000)
+            this.span = start.valueOf() < dayjs().startOf('day').valueOf()
+                ? Number((((value ? end.valueOf() : this.recent) - start.valueOf()) / 3600000).toFixed(2))
+                : 0
+
             this.data = [...this.data, ...data].filter(({ hash }) => {
                 const discarded = mark.has(hash)
 
