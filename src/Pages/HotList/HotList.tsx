@@ -1,22 +1,24 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Button, Timeline } from 'antd'
-import { DownOutlined, ReloadOutlined, SettingOutlined, StarOutlined, StarFilled, SyncOutlined, WeiboOutlined } from '@ant-design/icons'
+import { DownOutlined, ReloadOutlined, SettingOutlined, PictureOutlined, SyncOutlined, WeiboOutlined } from '@ant-design/icons'
 
 import AppStore from '@/store'
 import api from '@/api/hotlist'
-import KeywordManage, { Ref } from '@/common/KeywordManage'
+import KeywordManage, { Ref as KeywordManageRef } from '@/common/KeywordManage'
 
 import Store from './store'
+import Screenshot, { Ref as ScreenshotRef } from './Screenshot'
 
 import './index.less'
 
 interface Props { appStore: AppStore }
 
 const HotList: React.FC<Props> = props => {
+  const keywordManage = useRef<KeywordManageRef>(null)
   const [store] = useState(new Store(props.appStore))
-  const keywordManage = useRef<Ref>(null)
-  const { span, marked, loading, onRefresh, onGetMoreNews, onMark, getListColor, highlightKeyword } = store
+  const { span, loading, onRefresh, onGetMoreNews, onShow, getListColor, setScreenShow, highlightKeyword } = store
+  const _setScreenShow = useCallback((screenshot: ScreenshotRef) => setScreenShow(screenshot.onShow), [store])
 
   useEffect(() => {
     store.autoRefresh()
@@ -75,11 +77,8 @@ const HotList: React.FC<Props> = props => {
               {store.weiboList.map((item, i) => (
                 <Fragment key={item.hash}>
                   <div className='item' key={item.hash}>
-                    <span className='mark' onClick={() => onMark(item.hash)}>
-                      {marked.includes(item.hash)
-                        ? <StarFilled style={{ color: '#fbca0d' }} />
-                        : <StarOutlined style={{ color: '#ccc' }} />
-                      }
+                    <span className='mark' onClick={() => onShow && onShow(item.content)}>
+                      <PictureOutlined style={{ color: '#ccc' }} />
                     </span>
 
                     <span className='No'>{i+1}.</span>
@@ -112,6 +111,8 @@ const HotList: React.FC<Props> = props => {
         addAPI={api.addKeyword}
         delAPI={api.delKeyword}
       />
+
+      <Screenshot ref={_setScreenShow} />
     </div>
   )
 }

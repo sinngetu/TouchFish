@@ -2,14 +2,15 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import dayjs, { Dayjs } from 'dayjs'
 import { createElement, CSSProperties, Fragment } from 'react'
 import { Tag, Tooltip, message } from 'antd'
-import { CopyOutlined } from '@ant-design/icons'
+import { CopyOutlined, PictureOutlined } from '@ant-design/icons'
 import { TimelineItemProps } from 'antd/es/timeline'
 
 import { HotItem } from './interface'
-import { copy } from '@/utils/function'
 
 import api from '@/api/hotlist'
 import AppStore, { Platform } from '@/store'
+import { copy } from '@/utils/function'
+
 
 type Items = TimelineItemProps[]
 
@@ -32,6 +33,7 @@ export default class HotListStore {
     }
 
     timer: number = NaN
+    onShow?: (content: string) => void
 
     highlight: string[] = []
     platform: Platform = new Map()
@@ -40,7 +42,6 @@ export default class HotListStore {
     earliesy: Dayjs = dayjs()
     span: number = 0
     weiboList: HotItem[] = []
-    marked: string[] = []
 
     init = () => {
         this.list = []
@@ -65,6 +66,7 @@ export default class HotListStore {
             data.forEach(item => {
                 const date = item.date.slice(5, -3)
                 const platform = item.date.slice(-2)
+                const platformName = this.platform.get(+platform)
                 const content = this.highlightKeyword(item.content)
 
                 if (!cache.length || (cache[cache.length - 1].date !== date))
@@ -73,16 +75,47 @@ export default class HotListStore {
                 const cycle = cache[cache.length - 1].items
 
                 if (!cycle.length || ((cycle[cycle.length - 1].key as string)?.split('-')[0] !== platform))
-                    cycle.push({ children: createElement(Tag, { style: { borderWidth: 2, ...colors[platform] }, children: this.platform.get(+platform) }), key: `${platform}-${date}` })
+                    cycle.push({
+                        key: `${platform}-${date}`,
+                        children: createElement(Tag, {
+                            style: { borderWidth: 2, ...colors[platform], filter: 'grayscale(70%)' },
+                            children: platformName
+                        })
+                    })
+
+                const label = item.link ? [
+                    createElement(Tooltip, {
+                        key: 'copy',
+                        title: '复制链接' ,
+                        children: createElement('a', {
+                            children: createElement(Tag, {
+                                children: createElement(CopyOutlined),
+                                style: { padding: '0 5px' }
+                            }),
+                            onClick: () => this.onCopy(item.link)
+                        })
+                    }),
+                ] : undefined
+
+                if (label && platformName === '微博') {
+                    label.unshift(createElement(Tooltip, {
+                        key: 'link',
+                        title: '微博截图' ,
+                        children: createElement('a', {
+                            children: createElement(Tag, {
+                                children: createElement(PictureOutlined),
+                                style: { padding: '0 5px' }
+                            }),
+                            onClick: () => this.onShow && this.onShow(item.content)
+                        })
+                    }))
+                }
 
                 cycle.push({
+                    label,
                     color: 'gray',
                     key: `${platform}-${item.hash}`,
                     children: createElement('a', { children: content, href: item.link, target: '_blank', className: 'black' }),
-                    label: item.link ? [
-                        // createElement(Tooltip, { key: 'link', title: '打开链接' , children: createElement('a', { children: createElement(Tag, { children: createElement(LinkOutlined), style: { padding: '0 5px' } }), href: item.link, target: '_blank' }) }),
-                        createElement(Tooltip, { key: 'copy', title: '复制链接' , children: createElement('a', { children: createElement(Tag, { children: createElement(CopyOutlined), style: { padding: '0 5px' } }), onClick: () => this.onCopy(item.link) }) }),
-                    ] : undefined
                 })
             })
 
@@ -92,6 +125,7 @@ export default class HotListStore {
         })).finally(() => runInAction(() => this.loading = false))
     }
 
+    setScreenShow = (onShow: (content: string) => void) => this.onShow = onShow
     getWeiboList = () => { api.getWeiboList().then((data: HotItem[]) => runInAction(() => { this.weiboList = data })) }
 
     onRefresh = () => {
@@ -105,16 +139,6 @@ export default class HotListStore {
     onCopy = (url: string) => {
         if (copy(url)) message.success('复制成功~')
         else message.error('复制失败!')
-    }
-
-    onMark = (hash: string) => {
-        const marked = [...this.marked]
-        const i = marked.findIndex(h => h === hash)
-
-        i === -1 ? marked.push(hash) : marked.splice(i, 1)
-
-        this.marked = marked
-        localStorage.setItem('weibo-mark', marked.join(','))
     }
 
     getListColor = (date: string) => {
@@ -181,9 +205,6 @@ export default class HotListStore {
     autoRefresh = () => {
         this.onRefresh()
         this.timer = setInterval(this.onRefresh, 60000) as any
-
-        const saved = localStorage.getItem('weibo-mark')
-        this.marked = saved ? saved.split(',') : []
     }
 
     onDestory = () => { clearInterval(this.timer) }
