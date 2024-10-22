@@ -13,6 +13,7 @@
     "@types/react-dom": "^18.2.7",
     "antd": "^5.8.2",
     "axios": "^1.4.0",
+    "chopsticks": "file:",
     "history": "^5.3.0",
     "mobx": "^6.10.0",
     "mobx-react": "^7.6.0",

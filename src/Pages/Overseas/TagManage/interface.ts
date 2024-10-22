@@ -1,4 +1,4 @@
-import OverseasStore from "../store"
+import OverseasStore from '../store'
 
 export interface Ref {
     onShow: () => void
