@@ -18,7 +18,7 @@ const HotList: React.FC<Props> = props => {
   const keywordManage = useRef<KeywordManageRef>(null)
   const [store] = useState(new Store(props.appStore))
   const { span, loading, onRefresh, onGetMoreNews, onShow, getListColor, setScreenShow, highlightKeyword } = store
-  const _setScreenShow = useCallback((screenshot: ScreenshotRef) => setScreenShow(screenshot.onShow), [store])
+  const _setScreenShow = useCallback((screenshot: ScreenshotRef) => setScreenShow(screenshot && screenshot.onShow), [store])
 
   useEffect(() => {
     store.autoRefresh()

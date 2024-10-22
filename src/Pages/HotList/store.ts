@@ -64,7 +64,7 @@ export default class HotListStore {
 
             const cache = [] as { date: string, items: Items }[]
             data.forEach(item => {
-                const date = item.date.slice(5, -3)
+                const date = item.date.slice(11, -3)
                 const platform = item.date.slice(-2)
                 const platformName = this.platform.get(+platform)
                 const content = this.highlightKeyword(item.content)
@@ -77,8 +77,9 @@ export default class HotListStore {
                 if (!cycle.length || ((cycle[cycle.length - 1].key as string)?.split('-')[0] !== platform))
                     cycle.push({
                         key: `${platform}-${date}`,
-                        children: createElement(Tag, {
-                            style: { borderWidth: 2, ...colors[platform], filter: 'grayscale(70%)' },
+                        children: '　',
+                        label: createElement(Tag, {
+                            style: { borderWidth: 2, ...colors[platform] },
                             children: platformName
                         })
                     })
@@ -115,11 +116,16 @@ export default class HotListStore {
                     label,
                     color: 'gray',
                     key: `${platform}-${item.hash}`,
-                    children: createElement('a', { children: content, href: item.link, target: '_blank', className: 'black' }),
+                    children: createElement('a', {
+                        children: content,
+                        href: item.link,
+                        target: '_blank',
+                        className: 'black',
+                    }),
                 })
             })
 
-            cache.forEach(({ date, items }) => items[0].label = date)
+            cache.forEach(({ date, items }) => items[0].children = date)
 
             this.list = [...this.list, ...(cache.map(({ items }) => items).flat())]
         })).finally(() => runInAction(() => this.loading = false))
