@@ -98,7 +98,8 @@ export default class HotListStore {
                     }),
                 ] : undefined
 
-                if (label && platformName === '微博') {
+                const isWeibo = label && platformName === '微博'
+                if (isWeibo) {
                     label.unshift(createElement(Tooltip, {
                         key: 'link',
                         title: '微博截图' ,
@@ -120,7 +121,7 @@ export default class HotListStore {
                         children: content,
                         href: item.link,
                         target: '_blank',
-                        className: 'black',
+                        className: `black${isWeibo ? ' weibo' : ''}`,
                     }),
                 })
             })
