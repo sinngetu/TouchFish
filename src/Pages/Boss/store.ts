@@ -87,7 +87,7 @@ export default class BossStore {
             })
 
             return list
-            }).flat()
+            }).flat().filter(el => Boolean(el))
         })
 
         return createElement(Fragment, { children: info })

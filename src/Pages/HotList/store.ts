@@ -79,7 +79,7 @@ export default class HotListStore {
                         key: `${platform}-${date}`,
                         children: '　',
                         label: createElement(Tag, {
-                            style: { borderWidth: 2, ...colors[platform] },
+                            style: { borderWidth: 2, cursor: 'none', ...colors[platform] },
                             children: platformName
                         })
                     })
@@ -101,7 +101,7 @@ export default class HotListStore {
                 const isWeibo = label && platformName === '微博'
                 if (isWeibo) {
                     label.unshift(createElement(Tooltip, {
-                        key: 'link',
+                        key: 'screenshot',
                         title: '微博截图' ,
                         children: createElement('a', {
                             children: createElement(Tag, {
@@ -126,7 +126,7 @@ export default class HotListStore {
                 })
             })
 
-            cache.forEach(({ date, items }) => items[0].children = date)
+            cache.forEach(({ date, items }) => items[0].children = createElement('span', { children: date, className: 'time' }))
 
             this.list = [...this.list, ...(cache.map(({ items }) => items).flat())]
         })).finally(() => runInAction(() => this.loading = false))
@@ -178,7 +178,7 @@ export default class HotListStore {
                 })
 
                 return list
-            }).flat()
+            }).flat().filter(el => Boolean(el))
         })
 
         return createElement(Fragment, { children: info })

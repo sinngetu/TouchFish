@@ -141,7 +141,7 @@ export default class WandaStore {
             })
 
             return list
-            }).flat()
+            }).flat().filter(el => Boolean(el))
         })
 
         return createElement(Fragment, { children: info })

@@ -4,6 +4,7 @@ interface RawMedium {
     id: number
     name: string
     domain: string
+    type: number
 }
 
 interface RawPlatform {

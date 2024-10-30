@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Button, Timeline } from 'antd'
-import { DownOutlined, ReloadOutlined, SettingOutlined, PictureOutlined, SyncOutlined, WeiboOutlined } from '@ant-design/icons'
+import { DownOutlined, ReloadOutlined, SettingOutlined, PictureOutlined, WeiboOutlined } from '@ant-design/icons'
 
 import AppStore from '@/store'
 import api from '@/api/hotlist'
@@ -35,8 +35,6 @@ const HotList: React.FC<Props> = props => {
           onClick={onRefresh}
           style={{ marginRight: 12 }}
         >刷新</Button>
-
-        <Button disabled icon={<SyncOutlined />}>切换风格</Button>
 
         <div className="toolbar-right">
           <Button
