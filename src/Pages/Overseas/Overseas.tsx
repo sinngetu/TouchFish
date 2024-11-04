@@ -6,6 +6,7 @@ import { ColumnsType } from 'antd/es/table'
 import { MenuProps } from 'antd/es/menu'
 
 import AppStore from '@/store'
+import { KEYWORD_TYPE } from '@/utils/constant'
 import KeywordManage, { Ref as KeywordManageRef } from '@/common/KeywordManage'
 import api from '@/api/news'
 
@@ -251,7 +252,7 @@ const Overseas: React.FC<Props> = props => {
         <SearchManage ref={searchManage} />
         <KeywordManage
           ref={keywordManage}
-          keywordIndex={2}
+          keywordIndex={KEYWORD_TYPE.OVERSEAS}
           addAPI={api.addKeyword}
           delAPI={api.delKeyword}
         />

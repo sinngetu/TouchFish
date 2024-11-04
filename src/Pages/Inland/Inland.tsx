@@ -5,6 +5,7 @@ import { CopyOutlined, DownOutlined, LinkOutlined, UndoOutlined, SearchOutlined,
 import { ColumnsType } from 'antd/es/table'
 
 import AppStore from '@/store'
+import { KEYWORD_TYPE } from '@/utils/constant'
 import KeywordManage, { Ref as KeywordManageRef } from '@/common/KeywordManage'
 import api from '@/api/news'
 
@@ -155,7 +156,7 @@ const Inland: React.FC<Props> = props => {
 
       <KeywordManage
         ref={keywordManage}
-        keywordIndex={5}
+        keywordIndex={KEYWORD_TYPE.INLAND}
         addAPI={api.addKeyword}
         delAPI={api.delKeyword}
       />

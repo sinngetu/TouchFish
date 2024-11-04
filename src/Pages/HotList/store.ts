@@ -9,8 +9,8 @@ import { HotItem } from './interface'
 
 import api from '@/api/hotlist'
 import AppStore, { Platform } from '@/store'
+import { KEYWORD_TYPE } from '@/utils/constant'
 import { copy } from '@/utils/function'
-
 
 type Items = TimelineItemProps[]
 
@@ -29,7 +29,7 @@ export default class HotListStore {
         makeAutoObservable(this)
 
         appStore.getPlatform().then(platform => this.platform = platform)
-        appStore.getKeyword().then(keyword => this.highlight = (keyword[0] || []).map(({ word }) => word))
+        appStore.getKeyword().then(keyword => this.highlight = (keyword[KEYWORD_TYPE.HOTLIST] || []).map(({ word }) => word))
     }
 
     timer: number = NaN

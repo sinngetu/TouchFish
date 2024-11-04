@@ -1,4 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx'
+import { Fragment, createElement } from 'react'
 import dayjs, { Dayjs } from 'dayjs'
 import { message } from 'antd'
 import { TimeRangePickerProps } from 'antd/es/time-picker'
@@ -6,9 +7,9 @@ import { TimeRangePickerProps } from 'antd/es/time-picker'
 import { News } from './interface'
 
 import api from '@/api/news'
+import { NEWS_STATUS, KEYWORD_TYPE } from '@/utils/constant'
 import { copy } from '@/utils/function'
 import AppStore, { Media } from '@/store'
-import { Fragment, createElement } from 'react'
 
 interface Params {
     title?: string
@@ -23,12 +24,12 @@ export default class InlandStore {
         makeAutoObservable(this)
 
         appStore.getMedia().then(media => this.media = media)
-        appStore.getKeyword().then(keyword => this.highlight = (keyword[5] || []).map(({ word }) => word))
+        appStore.getKeyword().then(keyword => this.highlight = (keyword[KEYWORD_TYPE.INLAND] || []).map(({ word }) => word))
     }
 
     // private
     recent: number = 0
-    params: Params = { start: dayjs(), end: dayjs(), status: 2 }
+    params: Params = { start: dayjs(), end: dayjs(), status: NEWS_STATUS.INLAND }
     highlight: string[] = []
 
     // public
@@ -71,7 +72,7 @@ export default class InlandStore {
                 tags: (tags && tags.length) ? tags : undefined,
                 start,
                 end,
-                status: 2
+                status: NEWS_STATUS.INLAND
             }
         } else {
             this.params.start = this.params.start.subtract(30, "minute")

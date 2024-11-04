@@ -5,6 +5,7 @@ import { DownOutlined, ReloadOutlined, SettingOutlined, PictureOutlined, WeiboOu
 
 import AppStore from '@/store'
 import api from '@/api/hotlist'
+import { KEYWORD_TYPE } from '@/utils/constant'
 import KeywordManage, { Ref as KeywordManageRef } from '@/common/KeywordManage'
 
 import Store from './store'
@@ -105,7 +106,7 @@ const HotList: React.FC<Props> = props => {
 
       <KeywordManage
         ref={keywordManage}
-        keywordIndex={0}
+        keywordIndex={KEYWORD_TYPE.HOTLIST}
         addAPI={api.addKeyword}
         delAPI={api.delKeyword}
       />

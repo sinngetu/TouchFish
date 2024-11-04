@@ -1,4 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx'
+import { Fragment, createElement } from 'react'
 import dayjs, { Dayjs } from 'dayjs'
 import { message } from 'antd'
 import { TimeRangePickerProps } from 'antd/es/time-picker'
@@ -6,9 +7,9 @@ import { TimeRangePickerProps } from 'antd/es/time-picker'
 import { News } from './interface'
 
 import api from '@/api/news'
+import { NEWS_STATUS, KEYWORD_TYPE } from '@/utils/constant'
 import { copy } from '@/utils/function'
 import AppStore, { Keyword, Media } from '@/store'
-import { Fragment, createElement } from 'react'
 
 interface Params {
     title?: string
@@ -23,13 +24,13 @@ export default class OverseasStore {
         makeAutoObservable(this)
 
         appStore.getMedia().then(media => this.media = media)
-        appStore.getKeyword().then(keyword => this.tags = keyword[1])
-        appStore.getKeyword().then(keyword => this.highlight = (keyword[2] || []).map(({ word }) => word))
+        appStore.getKeyword().then(keyword => this.tags = keyword[KEYWORD_TYPE.OVERSEAS_TAG])
+        appStore.getKeyword().then(keyword => this.highlight = (keyword[KEYWORD_TYPE.OVERSEAS] || []).map(({ word }) => word))
     }
 
     // private
     recent: number = 0
-    params: Params = { start: dayjs(), end: dayjs(), status: 0 }
+    params: Params = { start: dayjs(), end: dayjs(), status: NEWS_STATUS.OVERSEAS }
     highlight: string[] = []
 
     // public
@@ -112,7 +113,7 @@ export default class OverseasStore {
                 tags: (tags && tags.length) ? tags : undefined,
                 start,
                 end,
-                status: 0
+                status: NEWS_STATUS.OVERSEAS
             }
         } else {
             this.params.start = this.params.start.subtract(30, "minute")
