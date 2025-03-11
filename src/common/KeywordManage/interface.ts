@@ -9,4 +9,5 @@ export interface Props {
     keywordIndex: number
     addAPI: (content: string, type: number) => Promise<number>
     delAPI: (id: number) => Promise<boolean>
+    title?: string
 }

@@ -1,7 +1,8 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { inject, observer } from 'mobx-react'
-import { Button, Timeline } from 'antd'
+import { Button, Dropdown, Timeline } from 'antd'
 import { DownOutlined, ReloadOutlined, SettingOutlined, PictureOutlined, WeiboOutlined } from '@ant-design/icons'
+import { MenuProps } from 'antd/es/menu'
 
 import AppStore from '@/store'
 import api from '@/api/hotlist'
@@ -16,10 +17,25 @@ import './index.less'
 interface Props { appStore: AppStore }
 
 const HotList: React.FC<Props> = props => {
-  const keywordManage = useRef<KeywordManageRef>(null)
+  const hotManage = useRef<KeywordManageRef>(null)
+  const risingManage = useRef<KeywordManageRef>(null)
   const [store] = useState(new Store(props.appStore))
   const { span, loading, onRefresh, onGetMoreNews, onShow, getListColor, setScreenShow, highlightKeyword } = store
   const _setScreenShow = useCallback((screenshot: ScreenshotRef) => setScreenShow(screenshot && screenshot.onShow), [store])
+
+  const manageMenu: MenuProps = useMemo(() => ({
+    items: [
+      { key: 'hot', label: '热搜' },
+      { key: 'rising', label: '上升榜' },
+    ],
+
+    onClick: ({ key }) => {
+      switch (key) {
+        case 'hot': return hotManage.current?.onShow()
+        case 'rising': return risingManage.current?.onShow()
+      }
+    }
+  }), [hotManage, risingManage])
 
   useEffect(() => {
     store.autoRefresh()
@@ -38,11 +54,13 @@ const HotList: React.FC<Props> = props => {
         >刷新</Button>
 
         <div className="toolbar-right">
-          <Button
-            type="link"
-            icon={<SettingOutlined />}
-            onClick={keywordManage.current?.onShow}
-          >关键词管理</Button>
+          <Dropdown menu={manageMenu}>
+            <Button
+              type="link"
+              icon={<SettingOutlined />}
+              style={{ position: 'absolute', right: 0, top: 0 }}
+            >关键词管理</Button>
+          </Dropdown>
         </div>
       </div>
 
@@ -105,8 +123,17 @@ const HotList: React.FC<Props> = props => {
       </div>
 
       <KeywordManage
-        ref={keywordManage}
+        title='热搜关键词'
+        ref={hotManage}
         keywordIndex={KEYWORD_TYPE.HOTLIST}
+        addAPI={api.addKeyword}
+        delAPI={api.delKeyword}
+      />
+
+      <KeywordManage
+        title='上升榜关键词'
+        ref={risingManage}
+        keywordIndex={KEYWORD_TYPE.RISING}
         addAPI={api.addKeyword}
         delAPI={api.delKeyword}
       />

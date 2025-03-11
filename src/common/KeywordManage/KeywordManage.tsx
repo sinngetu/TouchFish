@@ -17,7 +17,7 @@ const KeywordManage = forwardRef<Ref, Props>((props, ref) => {
 
   return (
     <Modal
-      title="关键词管理"
+      title={props.title || "关键词管理"}
       open={show}
       footer={null}
       onCancel={onCancel}
